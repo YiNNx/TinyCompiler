@@ -1,16 +1,19 @@
-.PHONY: clean 
+.PHONY: clean # 伪目标
 
-CC = gcc
+# 自定义环境变量
+CC = gcc # 指定编译器
 
-CFLAGS = -I include 
-CFILES = $(shell find src -name "*.c") 
-OBJS = $(CFILES:.c=.o) 
-TARGET = main 
+CFLAGS = -I include # 指定头文件目录
+CFILES = $(shell find src -name "*.c") # 搜索所有的源文件
+OBJS = $(CFILES:.c=.o) # 所有的目标文件
+TARGET = g-- # 最终生成目标
+DATA = src/data/*.txt # 搜索所有的数据文件
 
-RM = -rm -f 
+RM = -rm -f # 删除方式
 
 all: $(TARGET)
 
+# 项目构建方式
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS)
 
@@ -18,4 +21,4 @@ $(TARGET): $(OBJS)
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	$(RM) $(TARGET) $(OBJS)
+	$(RM) $(TARGET) $(OBJS) $(DATA)
