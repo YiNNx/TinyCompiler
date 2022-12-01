@@ -1,8 +1,15 @@
+/*
+ * @Author: yinn
+ * @Date: 2022-12-01 09:11:50
+ * @LastEditTime: 2022-12-01 15:06:11
+ * @Description: util functions
+ */
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 
-char* readFile(char* path, int* length) {
+char* readFile(char* path) {
     FILE* pfile;
     char* data;
 
@@ -12,11 +19,11 @@ char* readFile(char* path, int* length) {
         return NULL;
     }
     fseek(pfile, 0, SEEK_END);
-    *length = ftell(pfile);
-    data = (char*)malloc((*length + 1) * sizeof(char));
+    int length = ftell(pfile);
+    data = (char*)malloc((length + 1) * sizeof(char));
     rewind(pfile);
-    *length = fread(data, 1, *length, pfile);
-    data[*length] = '\0';
+    length = fread(data, 1, length, pfile);
+    data[length] = EOF;
     fclose(pfile);
     return data;
 }
@@ -36,3 +43,25 @@ void exitWithMessage(char* msg, int errCode) {
     exit(errCode);
 }
 
+int isDigit(char c) {
+    return c >= '0' && c <= '9';
+}
+
+int isLetter(char c) {
+    return c >= 'a' && c <= 'Z';
+}
+
+int isUnderline(char c) {
+    return c == '_';
+}
+
+int isWhite(char c) {
+    return c == ' ' || c == '\t' || c == '\n';
+}
+
+int charToInt(char c) {
+    if (!isDigit(c)) {
+        exitWithMessage("charToInt() went wrong", 1);
+    }
+    return c - '0';
+}

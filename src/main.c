@@ -1,3 +1,10 @@
+/*
+ * @Author: yinn
+ * @Date: 2022-12-01 08:19:36
+ * @LastEditTime: 2022-12-01 11:35:17
+ * @Description: main
+ */
+
 #include "stdio.h"
 #include "config.h"
 #include "utils.h"
@@ -16,8 +23,8 @@ int main(int argc, char* argv[]) {
     int length;
     char filepath[MAX_FILENAME];
     sprintf(filepath, filename);
-    char* content = readFile(filepath, &length);
+    char* content = readFile(filepath);
 
-    lexer(content, length);
+    lexer(content);
 }
 
