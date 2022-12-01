@@ -1,13 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:11:50
- * @LastEditTime: 2022-12-01 15:06:11
+ * @LastEditTime: 2022-12-01 17:19:13
  * @Description: util functions
  */
 
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "ctype.h"
 
 char* readFile(char* path) {
     FILE* pfile;
@@ -43,14 +44,6 @@ void exitWithMessage(char* msg, int errCode) {
     exit(errCode);
 }
 
-int isDigit(char c) {
-    return c >= '0' && c <= '9';
-}
-
-int isLetter(char c) {
-    return c >= 'a' && c <= 'Z';
-}
-
 int isUnderline(char c) {
     return c == '_';
 }
@@ -60,7 +53,7 @@ int isWhite(char c) {
 }
 
 int charToInt(char c) {
-    if (!isDigit(c)) {
+    if (!isdigit(c)) {
         exitWithMessage("charToInt() went wrong", 1);
     }
     return c - '0';

@@ -1,16 +1,18 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-01 15:04:37
+ * @LastEditTime: 2022-12-01 17:00:09
  * @Description: lexer
  */
 
-#include "lexer.h"
+#include "token.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "utils.h"
 #include "config.h"
 #include "string.h"
+#include "lexer.h"
+#include "ctype.h"
 
 char* content;
 int i = 0;
@@ -45,7 +47,7 @@ void back() {
     i--;
 }
 
-char skip() {
+char skipWhite() {
     char c = next();
     while (isWhite(c)) {
         c = next();
@@ -55,7 +57,12 @@ char skip() {
 
 void lexer(char* str) {
     content = str;
-
+    char c = skipWhite();
+    while (c != -1) {
+        Token* t = evalue(c);
+        printToken(t);
+        c = skipWhite();
+    }
 }
 
 /**
@@ -71,33 +78,29 @@ Token* evalue(char c) {
         t->token = PLUS;
         break;
     case '-':
-        if (isDigit(check())) {
+        if (isdigit(check())) {
             int num = getDigitInt(check());
             t->token = DIGIT_INT;
             t->intVal = -num;
         }
         else {
             t->token = MINUS;
-            break;
         }
+        break;
     case '*':
-        if (check() == '/') {
-            t->token = RNOTE;
-            next();
-        }
-        else {
-            t->token = STAR;
-            break;
-        }
+        t->token = STAR;
+        break;
     case '/':
         if (check() == '*') {
-            t->token = LNOTE;
+            next();
+            while (next() != '*' && check() != '/');
+            t->token = COMMENT;
             next();
         }
         else {
             t->token = DIV;
-            break;
         }
+        break;
     case '=':
         if (check() == '=') {
             t->token = EQL;
@@ -134,84 +137,105 @@ Token* evalue(char c) {
             exitWithMessage("invalid token: single !", 1);
         }
         break;
+    case ',':
+        t->token = COMMA;
+        break;
+    case ';':
+        t->token = SEMI;
+        break;
+    case '(':
+        t->token = LC;
+        break;
+    case ')':
+        t->token = RC;
+        break;
+    case '{':
+        t->token = LP;
+        break;
+    case '}':
+        t->token = RP;
+        break;
     default:
-        if (isDigit(c)) {
+        if (isdigit(c)) {
             int num = getDigitInt(c);
             t->token = DIGIT_INT;
             t->intVal = num;
         }
-        else if (isLetter(c)) {
+        else if (isalpha(c) || c == '_') {
             char word[MAX_VAR_NAME];
-            int j = 0;
-            while (isLetter(c) || isDigit(c)) {
-                word[j++] = c;
-                if (j >= MAX_VAR_NAME - 1) {
-                    exitWithMessage("variable name or function name too long", 1);
-                }
+            getWord(c, word);
+            if (strcmp(word, "int") == 0) {
+                t->token = INT;
             }
-            word[j + 1] = '\0';
+            else if (strcmp(word, "void") == 0) {
+                t->token = VOID;
+            }
+            else if (strcmp(word, "if") == 0) {
+                t->token = IF;
+            }
+            else if (strcmp(word, "else") == 0) {
+                t->token = ELSE;
+            }
+            else if (strcmp(word, "while") == 0) {
+                t->token = WHILE;
+            }
+            else if (strcmp(word, "return") == 0) {
+                t->token = RETURN;
+            }
+            else if (strcmp(word, "main") == 0) {
+                t->token = MAIN;
+            }
+            else if (strcmp(word, "input") == 0) {
+                t->token = INPUT;
+            }
+            else if (strcmp(word, "output") == 0) {
+                t->token = OUTPUT;
+            }
+            else {
+                t->wordVal = word;
+                if (skipWhite() == '(') {
+                    t->token = FUNC;
+                }
+                else {
+                    t->token = VAR;
+                }
+                back();
+            }
         }
-
+        else if (isWhite(c)) {
+        }
+        else {
+            exitWithMessage("invalid char", 1);
+        }
+        break;
     }
     return t;
 }
 
+
 int getDigitInt(char c) {
     int num = 0;
-    while (isDigit(c)) {
+    while (isdigit(c)) {
         int d = charToInt(c);
         c = next();
         num = num * 10 + d;
     }
-    if (isLetter(c)) {
+    if (isalpha(c)) {
         exitWithMessage("variable name or function name can't begin with digit", 1);
     }
     back();
     return num;
 }
 
-
-// int scan(struct token* t) {
-//     int c;
-
-//     // Skip whitespace
-//     c = skip();
-
-//     // Determine the token based on
-//     // the input character
-//     switch (c) {
-//     case EOF:
-//         return (0);
-//     case '+':
-//         t->token = PLUS;
-//         break;
-//     case '-':
-//         t->token = MINUS;
-//         break;
-//     case '*':
-//         t->token = STAR;
-//         break;
-//     case '/':
-//         t->token = DIV;
-//         break;
-//     default:
-//         // More here soon
-//     }
-
-//     // We found a token
-//     return (1);
-// }
-
-// static int skip(void) {
-//     char c;
-
-//     c = next();
-//     while (' ' == c || '\t' == c || '\n' == c || '\r' == c || '\f' == c) {
-//         c = next();
-//     }
-//     return (c);
-// }
-
-// static char next() {
-
-// }
+void getWord(char c, char* word) {
+    int j = 0;
+    while (isalpha(c) || isdigit(c) || c == '_') {
+        word[j++] = c;
+        c = next();
+        if (j >= MAX_VAR_NAME) {
+            exitWithMessage("variable name or function name too long", 1);
+        }
+    }
+    word[j] = '\0';
+    back();
+}

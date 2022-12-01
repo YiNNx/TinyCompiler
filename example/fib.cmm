@@ -1,0 +1,21 @@
+/* program for the nth fibonacci num */
+int fibonacci(int n) {
+    int a = 1, b = 1, res = 0;
+    if (n <= 0)return 0;
+    else if (n <= 2)return 1;
+
+    int i = 2;
+    while (i < n) {
+        res = a + b;
+        a = b;
+        b = res;
+        i = i + 1;
+    }
+    return res;
+}
+
+void main(void) {
+    int n = input();
+    int res = fibonacci(n);
+    output(res);
+}

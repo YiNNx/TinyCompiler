@@ -13,7 +13,7 @@ void main(void)
     int x;
     int y;
     int z;
-    int biggest; x = intput();
-    y = input(); z = intput();
+    int biggest; x = input();
+    y = input(); z = input();
     biggest = max(x, y, z); output(biggest);
 }
