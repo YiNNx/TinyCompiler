@@ -1,15 +1,17 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:11:50
- * @LastEditTime: 2022-12-01 17:19:13
- * @Description: util functions
+ * @LastEditTime: 2022-12-01 18:26:33
+ * @Description: Util functions
  */
 
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "ctype.h"
+#include "utils.h"
 
+ /**
+  * @description: Dynamically read the file with variable length
+  * @param path The filepath
+  * @return The pointer of code string
+  */
 char* readFile(char* path) {
     FILE* pfile;
     char* data;
@@ -29,6 +31,12 @@ char* readFile(char* path) {
     return data;
 }
 
+/**
+ * @description: Compare the suffix
+ * @param str
+ * @param suffix
+ * @return non-zero if str ends with suffix
+ */
 int endsWith(const char* str, const char* suffix) {
     if (!str || !suffix)
         return 0;
@@ -39,7 +47,7 @@ int endsWith(const char* str, const char* suffix) {
     return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
 
-void exitWithMessage(char* msg, int errCode) {
+void exitWithErr(char* msg, int errCode) {
     printf(msg);
     exit(errCode);
 }
@@ -54,7 +62,7 @@ int isWhite(char c) {
 
 int charToInt(char c) {
     if (!isdigit(c)) {
-        exitWithMessage("charToInt() went wrong", 1);
+        exitWithErr("charToInt() went wrong", 1);
     }
     return c - '0';
 }

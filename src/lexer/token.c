@@ -1,13 +1,16 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:55:43
- * @LastEditTime: 2022-12-01 16:55:23
- * @Description:
+ * @LastEditTime: 2022-12-01 18:31:56
+ * @Description: Helper functions for token
  */
 
 #include "token.h"
 #include"stdio.h"
 
+ /**
+  * @description: To get the emun name of TokenType
+  */
 char* types[] = {
    "INT",
     "VOID",
@@ -21,27 +24,31 @@ char* types[] = {
     "STAR",
     "DIV",
     "ASSIGN",
-    "GREATER", // >
-    "LESS", // <
-    "NOT_EQL", // !=
-    "EQL", // ==
-    "GREATER_OR_EQL", // >=
-    "LESS_OR_EQL", // <=
+    "GREATER",
+    "LESS",
+    "NOT_EQL",
+    "EQL",
+    "GREATER_OR_EQL",
+    "LESS_OR_EQL",
     "DIGIT_INT",
     "VAR",
     "FUNC",
     "COMMA",
     "SEMI",
-    "LP", // (
-    "RP", // )
-    "LC", // {
-    "RC", // }
-    "COMMENT", // /* note */
+    "LP",
+    "RP",
+    "LC",
+    "RC",
+    "COMMENT",
     "MAIN",
     "INPUT",
     "OUTPUT",
 };
 
+/**
+ * @description: Print property of single Token
+ * @param t The Token
+ */
 void printToken(Token* t) {
     if (t->token == DIGIT_INT) {
         printf("%s: %d,\n", types[t->token], t->intVal);

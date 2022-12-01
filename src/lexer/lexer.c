@@ -1,74 +1,37 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-01 17:00:09
- * @Description: lexer
+ * @LastEditTime: 2022-12-01 18:48:31
+ * @Description: Core lexer functions
  */
 
-#include "token.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "utils.h"
-#include "config.h"
-#include "string.h"
 #include "lexer.h"
-#include "ctype.h"
+#include "utils.h"
 
-char* content;
-int i = 0;
-
-/**
- * @description: get the pointed char in str, and pointer ++
- * @return {*}
- */
-char next() {
-    if (content[i] != EOF) {
-        return content[i++];
-    }
-    else {
-        return -1;
-    }
-}
-
-/**
- * @description: get the pointed char in str
- * @return {*}
- */
-char check() {
-    if (content[i] != EOF) {
-        return content[i];
-    }
-    else {
-        return -1;
-    }
-}
-
-void back() {
-    i--;
-}
-
-char skipWhite() {
-    char c = next();
-    while (isWhite(c)) {
-        c = next();
-    }
-    return c;
-}
-
-void lexer(char* str) {
-    content = str;
+ /**
+  * @description: Build the lexer using the DFA
+  * @param codeContent Code content
+  * @param tokens The result Token list after building
+  * @param len The length of the result list
+  */
+void lexer(char* codeContent, Token* tokens, int* len) {
+    initStr(codeContent);
     char c = skipWhite();
+    int j = 0;
     while (c != -1) {
         Token* t = evalue(c);
+        tokens[j] = *t;
         printToken(t);
         c = skipWhite();
+        j++;
     }
+    *len = j;
 }
 
 /**
- * @description:
- * @param {char} c
- * @return {*}
+ * @description: Process the current char
+ * @param c The current char
+ * @return Token formed by the current char (and backward)
  */
 Token* evalue(char c) {
     Token* t = (Token*)malloc(sizeof(Token));
@@ -134,7 +97,7 @@ Token* evalue(char c) {
             next();
         }
         else {
-            exitWithMessage("invalid token: single !", 1);
+            exitWithErr("invalid token: single !", 1);
         }
         break;
     case ',':
@@ -161,35 +124,13 @@ Token* evalue(char c) {
             t->token = DIGIT_INT;
             t->intVal = num;
         }
-        else if (isalpha(c) || c == '_') {
+        else if (isalpha(c) || isUnderline(c)) {
+            int token;
             char word[MAX_VAR_NAME];
+
             getWord(c, word);
-            if (strcmp(word, "int") == 0) {
-                t->token = INT;
-            }
-            else if (strcmp(word, "void") == 0) {
-                t->token = VOID;
-            }
-            else if (strcmp(word, "if") == 0) {
-                t->token = IF;
-            }
-            else if (strcmp(word, "else") == 0) {
-                t->token = ELSE;
-            }
-            else if (strcmp(word, "while") == 0) {
-                t->token = WHILE;
-            }
-            else if (strcmp(word, "return") == 0) {
-                t->token = RETURN;
-            }
-            else if (strcmp(word, "main") == 0) {
-                t->token = MAIN;
-            }
-            else if (strcmp(word, "input") == 0) {
-                t->token = INPUT;
-            }
-            else if (strcmp(word, "output") == 0) {
-                t->token = OUTPUT;
+            if (compareWithKeywords(word, &token)) {
+                t->token = token;
             }
             else {
                 t->wordVal = word;
@@ -205,37 +146,10 @@ Token* evalue(char c) {
         else if (isWhite(c)) {
         }
         else {
-            exitWithMessage("invalid char", 1);
+            exitWithErr("invalid char", 1);
         }
         break;
     }
     return t;
 }
 
-
-int getDigitInt(char c) {
-    int num = 0;
-    while (isdigit(c)) {
-        int d = charToInt(c);
-        c = next();
-        num = num * 10 + d;
-    }
-    if (isalpha(c)) {
-        exitWithMessage("variable name or function name can't begin with digit", 1);
-    }
-    back();
-    return num;
-}
-
-void getWord(char c, char* word) {
-    int j = 0;
-    while (isalpha(c) || isdigit(c) || c == '_') {
-        word[j++] = c;
-        c = next();
-        if (j >= MAX_VAR_NAME) {
-            exitWithMessage("variable name or function name too long", 1);
-        }
-    }
-    word[j] = '\0';
-    back();
-}

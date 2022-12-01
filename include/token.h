@@ -1,8 +1,8 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:49:59
- * @LastEditTime: 2022-12-01 17:23:21
- * @Description:
+ * @LastEditTime: 2022-12-01 18:50:40
+ * @Description: Statemant for struct Token & Enum for Token types
  */
 
 #pragma once
