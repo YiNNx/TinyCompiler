@@ -1,19 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-01 18:48:31
+ * @LastEditTime: 2022-12-01 19:02:49
  * @Description: Core lexer functions
  */
 
 #include "lexer.h"
 #include "utils.h"
 
- /**
-  * @description: Build the lexer using the DFA
-  * @param codeContent Code content
-  * @param tokens The result Token list after building
-  * @param len The length of the result list
-  */
+// Build the lexer using the DFA
 void lexer(char* codeContent, Token* tokens, int* len) {
     initStr(codeContent);
     char c = skipWhite();
@@ -28,11 +23,7 @@ void lexer(char* codeContent, Token* tokens, int* len) {
     *len = j;
 }
 
-/**
- * @description: Process the current char
- * @param c The current char
- * @return Token formed by the current char (and backward)
- */
+// Process the current char
 Token* evalue(char c) {
     Token* t = (Token*)malloc(sizeof(Token));
     switch (c)
