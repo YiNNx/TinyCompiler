@@ -1,14 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:55:43
- * @LastEditTime: 2022-12-01 19:03:15
+ * @LastEditTime: 2022-12-03 19:08:38
  * @Description: Helper functions for token
  */
 
 #include "token.h"
 #include"stdio.h"
 
-// To get the emun name of TokenType
+ // To get the emun name of TokenType
 char* types[] = {
    "INT",
     "VOID",
@@ -43,8 +43,16 @@ char* types[] = {
     "OUTPUT",
 };
 
+void printTokenList(Token* head) {
+    Token* p = head->next;
+    while (p != NULL) {
+        printToken(p);
+        p = p->next;
+    }
+}
+
 // Print property of the single Token
-void printToken(Token * t) {
+void printToken(Token* t) {
     if (t->token == DIGIT_INT) {
         printf("%s: %d,\n", types[t->token], t->intVal);
     }

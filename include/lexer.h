@@ -1,23 +1,24 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 16:00:18
- * @LastEditTime: 2022-12-01 18:13:03
+ * @LastEditTime: 2022-12-03 14:21:01
  * @Description: Header file for lexer
  */
 
 #pragma once
 
 #include "token.h"
+#include "utils.h"
 
  /* lexer functions */
 
-void lexer(char* codeStr, Token* tokens, int* len);
+void lexer(char* codeStr, Token* head);
 
-Token* evalue(char c);
+Token* match(char c);
 
 /* helper functions */
 
-int compareWithKeywords(char* word, int* token);
+bool compareWithKeywords(char* word, int* token);
 
 int getDigitInt(char c);
 

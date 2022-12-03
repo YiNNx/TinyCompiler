@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:51:11
- * @LastEditTime: 2022-12-01 18:56:04
+ * @LastEditTime: 2022-12-03 12:21:24
  * @Description: Helper functions for lexer
  */
 
@@ -10,7 +10,7 @@
 #include "token.h"
 
  // Compare the word with keywords, and return the corresponding enum value
-int compareWithKeywords(char* word, int* token) {
+bool compareWithKeywords(char* word, int* token) {
     if (strcmp(word, "int") == 0) {
         *token = INT;
     }
@@ -39,9 +39,9 @@ int compareWithKeywords(char* word, int* token) {
         *token = OUTPUT;
     }
     else {
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 // Get a single contiguous int number

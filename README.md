@@ -35,11 +35,11 @@ main() input() output()
 <declaration> ::= <var-declaration> 
                 | <func-declaration>
 
-<var-declaration> ::= <type-specifier> ID
+<var-declaration> ::= <type-specifier> ID; 
 
 <type-specifier> ::= int 
                    | void
-                   
+
 <func-declaration> ::= <type-specifier> ID(<params>) <compound-stmt> 
 
 <params> ::= <params-list>
@@ -50,10 +50,10 @@ main() input() output()
                
 <param> ::= <type-specifier> ID
 
-<compound-stmt> ::= { <local-declarations> <statement-list> }  
+<compound-stmt> ::= { <local-declarations> <statement-list> }
 
-<local-declarations> ::= <local-declarations> <var-declaration> 
-                       | empty  
+<local-declarations> ::= <local-declarations> <var-declaration>
+                       | empty
                        
 <statement-list> ::= <statement-list> <statement> 
                    | empty  
@@ -69,11 +69,8 @@ main() input() output()
                     
 <selection-stmt> ::= if (<expression>) <statement>
                    | if (<expression>) <statement> else <statement>  
-                   | if (<expression>) <compound-stmt>
-                   | if (<expression>) <statement> else <compound-stmt>  
                    
 <iteration-stmt> ::= while (<expression>) <statement>
-                   | while (<expression>) <compound-stmt>
 
 <return-stmt> ::= return;
                 | return <expression>;  
@@ -83,8 +80,8 @@ main() input() output()
                
 <var> ::= ID
 
-<simple-expression> ::= <additive-expression> <relop> <additive-expression>
-                      | <additive-expression>
+<simple-expression> ::= <expr> <relop> <expr>
+                      | <expr>
                       
 <relop> ::= <= 
           | < 
@@ -95,13 +92,13 @@ main() input() output()
           | && 
           | ||  
         
-<additive-expression> ::= <additive-expression> <addop> <term> 
-                        | <term>
+<expr> ::= <expr> <addop> <term> 
+               | <term>
                         
 <addop> ::= + 
           | -  
 
-<term> ::= <term> <mulopfactor> 
+<term> ::= <term> <mulop> <factor> 
          | <factor>
          
 <mulop> ::= * 
@@ -126,10 +123,13 @@ main() input() output()
 ```
 /* for the nth fibonacci num */
 int fibonacci(int n) {
-    int a = 1, b = 1, res = 0, i = 2;
     if (n <= 0) return 0;
     else if (n <= 2) return 1;
 
+    int a, b, res, i;
+    a = b = 1;
+    res = 0;
+    i = 2;
     while (i < n) {
         res = a + b;
         a = b;
@@ -158,23 +158,6 @@ INT,
 VAR: n,
 RC,
 LP,
-INT,
-VAR: a,
-ASSIGN,
-DIGIT_INT: 1,
-COMMA,
-VAR: b,
-ASSIGN,
-DIGIT_INT: 1,
-COMMA,
-VAR: res,
-ASSIGN,
-DIGIT_INT: 0,
-COMMA,
-VAR: i,
-ASSIGN,
-DIGIT_INT: 2,
-SEMI,
 IF,
 LC,
 VAR: n,
@@ -193,6 +176,29 @@ DIGIT_INT: 2,
 RC,
 RETURN,
 DIGIT_INT: 1,
+SEMI,
+INT,
+VAR: a,
+COMMA,
+VAR: b,
+COMMA,
+VAR: res,
+COMMA,
+VAR: i,
+SEMI,
+VAR: a,
+ASSIGN,
+VAR: b,
+ASSIGN,
+DIGIT_INT: 1,
+SEMI,
+VAR: res,
+ASSIGN,
+DIGIT_INT: 0,
+SEMI,
+VAR: i,
+ASSIGN,
+DIGIT_INT: 2,
 SEMI,
 WHILE,
 LC,
@@ -256,5 +262,70 @@ VAR: res,
 RC,
 SEMI,
 RP
+```
+
+## AST
+
+```
+FUNCTION fibonacci
+  ASSIGN
+    ASSIGN
+      INTLIT 1
+      IDENT b
+    IDENT a
+  ASSIGN
+    INTLIT 0
+    IDENT res
+  ASSIGN
+    INTLIT 2
+    IDENT i
+  IF, end L2
+    LE
+      IDENT rval n
+      INTLIT 0
+    RETURN
+      WIDEN
+        INTLIT 0
+    IF
+      LE
+        IDENT rval n
+        INTLIT 2
+      RETURN
+        WIDEN
+          INTLIT 1
+  WHILE, start L4
+    LT
+      IDENT rval i
+      IDENT rval n
+    ASSIGN
+      ADD
+        IDENT rval a
+        IDENT rval b
+      IDENT res
+    ASSIGN
+      IDENT rval b
+      IDENT a
+    ASSIGN
+      IDENT rval res
+      IDENT b
+    ASSIGN
+      ADD
+        IDENT rval i
+        INTLIT 1
+      IDENT i
+  RETURN
+    IDENT rval res
+
+FUNCTION main
+  ASSIGN
+    FUNCCALL input
+    IDENT n
+  ASSIGN
+    FUNCCALL fibonacci
+      IDENT rval n
+    IDENT res
+  FUNCCALL output
+    IDENT rval res
+
 ```
 

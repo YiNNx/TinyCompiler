@@ -1,7 +1,8 @@
+
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:49:59
- * @LastEditTime: 2022-12-01 18:50:40
+ * @LastEditTime: 2022-12-03 11:21:37
  * @Description: Statemant for struct Token & Enum for Token types
  */
 
@@ -11,6 +12,7 @@ typedef struct Token {
 	int token;
 	int intVal;
 	char* wordVal;
+	struct Token* next;
 } Token;
 
 enum TokenType {
@@ -59,3 +61,5 @@ enum TokenType {
 };
 
 void printToken(Token* t);
+
+void printTokenList(Token* head);

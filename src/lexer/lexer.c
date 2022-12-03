@@ -1,30 +1,31 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-01 19:02:49
+ * @LastEditTime: 2022-12-03 23:41:43
  * @Description: Core lexer functions
  */
 
 #include "lexer.h"
 #include "utils.h"
 
-// Build the lexer using the DFA
-void lexer(char* codeContent, Token* tokens, int* len) {
-    initStr(codeContent);
+ // Build the lexer using the DFA
+void lexer(char* codeStr, Token* head) {
+    initStr(codeStr);
     char c = skipWhite();
-    int j = 0;
+    Token* p = head;
+
     while (c != -1) {
-        Token* t = evalue(c);
-        tokens[j] = *t;
-        printToken(t);
+        Token* t = match(c);
+        p->next = t;
+        p = p->next;
         c = skipWhite();
-        j++;
     }
-    *len = j;
+    p->next = NULL;
+    free(codeStr);
 }
 
 // Process the current char
-Token* evalue(char c) {
+Token* match(char c) {
     Token* t = (Token*)malloc(sizeof(Token));
     switch (c)
     {
@@ -98,16 +99,16 @@ Token* evalue(char c) {
         t->token = SEMI;
         break;
     case '(':
-        t->token = LC;
-        break;
-    case ')':
-        t->token = RC;
-        break;
-    case '{':
         t->token = LP;
         break;
-    case '}':
+    case ')':
         t->token = RP;
+        break;
+    case '{':
+        t->token = LC;
+        break;
+    case '}':
+        t->token = RC;
         break;
     default:
         if (isdigit(c)) {
@@ -124,7 +125,8 @@ Token* evalue(char c) {
                 t->token = token;
             }
             else {
-                t->wordVal = word;
+                t->wordVal = (char*)malloc(sizeof(char) * MAX_VAR_NAME);
+                strcpy(t->wordVal, word);
                 if (skipWhite() == '(') {
                     t->token = FUNC;
                 }

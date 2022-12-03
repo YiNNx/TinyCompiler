@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:11:50
- * @LastEditTime: 2022-12-01 19:02:25
+ * @LastEditTime: 2022-12-03 13:48:27
  * @Description: Util functions
  */
 
@@ -28,26 +28,26 @@ char* readFile(char* path) {
 }
 
 // Compare the suffix
-int endsWith(const char* str, const char* suffix) {
+bool endsWith(const char* str, const char* suffix) {
     if (!str || !suffix)
-        return 0;
+        return false;
     size_t lenstr = strlen(str);
     size_t lensuffix = strlen(suffix);
     if (lensuffix > lenstr)
-        return 0;
+        return false;
     return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }
 
 void exitWithErr(char* msg, int errCode) {
-    printf(msg);
+    fprintf(stderr, msg);
     exit(errCode);
 }
 
-int isUnderline(char c) {
+bool isUnderline(char c) {
     return c == '_';
 }
 
-int isWhite(char c) {
+bool isWhite(char c) {
     return c == ' ' || c == '\t' || c == '\n';
 }
 
