@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:29:59
- * @LastEditTime: 2022-12-04 12:11:27
+ * @LastEditTime: 2022-12-04 15:17:24
  * @Description:
  */
 
@@ -48,7 +48,7 @@ typedef struct ASTNode {
     struct ASTNode* right;
     union {
         int intvalue;               // For NODE_INTLIT, the integer value
-        int id;                     // For NODE_IDENT, the symbol slot number
+        char* id;                     // For NODE_IDENT, the symbol slot number
     } v;
 }ASTNode;
 
@@ -56,6 +56,8 @@ void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r);
 
 void printASTree(const ASTNode* root);
 
-ASTNode* getEmptyNode();
+ASTNode* createEmptyNode();
+
+ASTNode* createGlueNode();
 
 void printNode(const ASTNode* n);

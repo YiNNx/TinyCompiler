@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-04 12:13:38
+ * @LastEditTime: 2022-12-04 15:44:34
  * @Description: AST
  */
 
@@ -9,16 +9,16 @@
 #include "utils.h"
 
 char* nodeTypes[] = {
-    "INT_NUM",
+    "int",
     "IDENT",
     "IF",
     "WHILE",
     "RETURN",
-    "PLUS",
-    "MINUS",
-    "STAR",
-    "DIV",
-    "ASSIGN",
+    "+",
+    "-",
+    "*",
+    "/",
+    "=",
     "GREATER",
     "LESS",
     "NOT_EQL",
@@ -26,7 +26,7 @@ char* nodeTypes[] = {
     "GREATER_OR_EQL",
     "LESS_OR_EQL",
     "FUNCTION",
-    "FUNCCALL",
+    "CALL",
     "GLUE",
     "EMPTY",
 };
@@ -43,7 +43,7 @@ void printSubTree(const char* prefix, const ASTNode* node, bool isLeft)
     if (node != NULL)
     {
         printf(prefix);
-        printf(isLeft ? "├──" : "└──");
+        printf(isLeft ? "├── " : "└── ");
 
         // print the value of the node
         printNode(node);
@@ -63,6 +63,9 @@ void printNode(const ASTNode* n) {
     if (n->op == NODE_INT_NUM) {
         printf("%s: %d\n", nodeTypes[n->op], n->v.intvalue);
     }
+    else if (n->op == NODE_FUNCCALL) {
+        printf("%s: %s\n", nodeTypes[n->op], n->v.id);
+    }
     else {
         printf("%s\n", nodeTypes[n->op]);
     }
@@ -73,10 +76,18 @@ void printASTree(const ASTNode* root)
     printSubTree("", root, false);
 }
 
-ASTNode* getEmptyNode() {
+ASTNode* createEmptyNode() {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     node->left = NULL;
     node->mid = NULL;
     node->right = NULL;
     node->op = NODE_EMPTY;
+}
+
+ASTNode* createGlueNode() {
+    ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
+    node->left = NULL;
+    node->mid = NULL;
+    node->right = NULL;
+    node->op = NODE_GLUE;
 }

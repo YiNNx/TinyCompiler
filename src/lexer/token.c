@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:55:43
- * @LastEditTime: 2022-12-03 19:08:38
+ * @LastEditTime: 2022-12-04 13:47:39
  * @Description: Helper functions for token
  */
 
@@ -10,7 +10,7 @@
 
  // To get the emun name of TokenType
 char* types[] = {
-   "INT",
+    "INT",
     "VOID",
     "IF",
     "ELSE",

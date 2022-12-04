@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-04 11:51:09
+ * @LastEditTime: 2022-12-04 15:14:36
  * @Description:
  */
 
@@ -26,3 +26,13 @@ ASTNode* mulop(Token** t);
 ASTNode* factor(Token** t);
 
 ASTNode* parser(Token* tokenList);
+
+ASTNode* call(Token** t);
+
+ASTNode* args(Token** t);
+
+ASTNode* argList(Token** t);
+
+ASTNode* argListTail(Token** t);
+
+ASTNode* var(Token** t);
