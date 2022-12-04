@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:00:30
- * @LastEditTime: 2022-12-04 17:17:09
+ * @LastEditTime: 2022-12-04 21:56:49
  * @Description: Core parser functions
  */
 
@@ -32,7 +32,7 @@ ASTNode* expression(Token** t) {
 
     ASTNode* varNode, * expressionNode, * simpleExprNode;
     if ((varNode = var(&p)) != NULL &&
-        p->token == ASSIGN &&
+        p != NULL && p->token == ASSIGN &&
         (p = p->next, (expressionNode = expression(&p)) != NULL))
     {
         ASTNode* assignNode = createEmptyNode();
@@ -60,6 +60,7 @@ ASTNode* simpleExpr(Token** t) {
             n->left = rootNode;
             rootNode = n;
         }
+        *t = p;
         return rootNode;
     }
     return NULL;
@@ -249,7 +250,7 @@ ASTNode* factor(Token** t) {
     ASTNode* n;
     if (p->token == LP) {
         p = p->next;
-        if ((n = addExpr(&p)) != NULL && p->token == RP) {
+        if ((n = addExpr(&p)) != NULL && p != NULL && p->token == RP) {
             *t = p->next;
             return n;
         }
@@ -282,11 +283,11 @@ ASTNode* call(Token** t) {
         funcNode->op = NODE_FUNCCALL;
         funcNode->v.id = p->wordVal;
         p = p->next->next;
-        if (p->token == RP) {
+        if (p != NULL && p->token == RP) {
             (*t) = p->next;
             return funcNode;
         }
-        if ((n = args(&p)) != NULL && p->token == RP) {
+        if ((n = args(&p)) != NULL && p != NULL && p->token == RP) {
             funcNode->left = n->op == NODE_EMPTY ? NULL : n;
             (*t) = p->next;
             return funcNode;

@@ -1,14 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 13:51:34
- * @LastEditTime: 2022-12-04 17:15:36
+ * @LastEditTime: 2022-12-04 21:34:24
  * @Description:
  */
 
 #include"parser.h"
 
 ASTNode* parser(Token* tokenList) {
-    return expression(&tokenList->next);
+    return statementList(&tokenList->next);
 }
 
 // <program> ::= <declaration-list>
@@ -34,7 +34,6 @@ ASTNode* parser(Token* tokenList) {
 
 // <param> ::= <type-specifier> ID
 
-// <compound-stmt> ::= { <local-declarations> <statement-list> }
 
 // <local-declarations> ::= <local-declarations> <var-declaration>
 //                        | empty
@@ -51,6 +50,8 @@ ASTNode* parser(Token* tokenList) {
 // <expression-stmt> ::= <expression>;
 //                     |;  
 
+// <compound-stmt> ::= { <local-declarations> <statement-list> }
+
 // <selection-stmt> ::= if (<expression>) <statement>
 //                    | if (<expression>) <statement> else <statement>  
 
@@ -59,10 +60,7 @@ ASTNode* parser(Token* tokenList) {
 // <return-stmt> ::= return;
 //                 | return <expression>;  
 
-
-
 // --------
-
 
  // <expression> ::= <var> = <expression>
  //                | <simple-expr>

@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-04 16:48:03
+ * @LastEditTime: 2022-12-04 22:25:42
  * @Description: AST
  */
 
@@ -42,19 +42,27 @@ void printSubTree(const char* prefix, const ASTNode* node, bool isLeft)
 {
     if (node != NULL)
     {
-        printf(prefix);
-        printf(isLeft ? "├── " : "└── ");
-
-        // print the value of the node
-        printNode(node);
-
         char l[100];
-        sprintf(l, "%s%s", prefix, (isLeft ? "│   " : "    "));
         char r[100];
-        sprintf(r, "%s%s", prefix, (isLeft ? "│   " : "    "));
+
+        if (node->op != NODE_GLUE) {
+            printf(prefix);
+            printf("└── ");
+
+            // print the value of the node
+            printNode(node);
+
+            sprintf(l, "%s%s", prefix, (isLeft ? "│   " : "    "));
+            sprintf(r, "%s%s", prefix, (isLeft ? "│   " : "    "));
+        }
+        else {
+            sprintf(l, "%s", prefix);
+            sprintf(r, "%s", prefix);
+        }
 
         // enter the next tree level - left and right branch
         printSubTree(l, node->left, true);
+        printSubTree(r, node->mid, false);
         printSubTree(r, node->right, false);
     }
 }

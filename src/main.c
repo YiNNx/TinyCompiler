@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 08:19:36
- * @LastEditTime: 2022-12-04 12:07:26
+ * @LastEditTime: 2022-12-04 21:49:59
  * @Description: The entry of the program, parse the arguements and read the corresponding .cmm file
  */
 
@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
     }
 
     char* codeStr = readFile(filename);
-    printf("%s\n------\n",codeStr);
-    
+    printf("%s\n------\n", codeStr);
+
     Token* tokenList;
     lexer(codeStr, &tokenList);
     printTokenList(tokenList);

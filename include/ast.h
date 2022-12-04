@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:29:59
- * @LastEditTime: 2022-12-04 15:17:24
+ * @LastEditTime: 2022-12-04 22:16:50
  * @Description:
  */
 
@@ -61,3 +61,7 @@ ASTNode* createEmptyNode();
 ASTNode* createGlueNode();
 
 void printNode(const ASTNode* n);
+
+void printGlueTree(const char* l, const char* r, const ASTNode* node);
+
+void printSubTree(const char* prefix, const ASTNode* node, bool isLeft);

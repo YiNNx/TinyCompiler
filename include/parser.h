@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-04 17:13:42
+ * @LastEditTime: 2022-12-04 21:33:34
  * @Description:
  */
 
@@ -44,3 +44,17 @@ ASTNode* argList(Token** t);
 ASTNode* argListTail(Token** t);
 
 ASTNode* var(Token** t);
+
+ASTNode* statementList(Token** t);
+
+ASTNode* statement(Token** t);
+
+ASTNode* expressionStmt(Token** t);
+
+ASTNode* compoundStmt(Token** t);
+
+ASTNode* selectionStmt(Token** t);
+
+ASTNode* iterationStmt(Token** t);
+
+ASTNode* returnStmt(Token** t);
