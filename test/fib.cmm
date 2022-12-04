@@ -16,13 +16,6 @@ int fibonacci(int n) {
     return (res);
 }
 
-int input(int n){
-    return (1);
-}
-void output(int n){
-    ;
-}
-
 void main(void) {
     int n, res;
     n = input();

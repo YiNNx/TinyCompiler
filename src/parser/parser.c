@@ -1,14 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 13:51:34
- * @LastEditTime: 2022-12-04 15:46:42
+ * @LastEditTime: 2022-12-04 17:15:36
  * @Description:
  */
 
 #include"parser.h"
 
 ASTNode* parser(Token* tokenList) {
-    return expr(&tokenList->next);
+    return expression(&tokenList->next);
 }
 
 // <program> ::= <declaration-list>
@@ -61,19 +61,49 @@ ASTNode* parser(Token* tokenList) {
 
 
 
-// <expression> ::= <var> = <expression>
-//                | <simple-expression>
+// --------
 
-// <var> ::= ID
 
-// <simple-expression> ::= <expr> <relop> <expr>
-//                       | <expr>
+ // <expression> ::= <var> = <expression>
+ //                | <simple-expr>
 
-// <relop> ::= <= 
-//           | < 
-//           | > 
-//           | >= 
-//           | == 
-//           | != 
-//           | && 
-//           | ||  
+ // <var> ::= ID
+
+ // <simple-expr> ::= <add-expr> <relop> <add-expr>
+ //                       | <add-expr>
+
+ // <relop> ::= <= 
+ //           | < 
+ //           | > 
+ //           | >= 
+ //           | == 
+ //           | != 
+ //           | && 
+ //           | ||  
+
+// ------------------------------------------
+
+ // <add-expr> ::= <add-expr> <addop> <term> 
+ //          | <term>
+
+ // <addop> ::= + 
+ //           | -  
+
+ // <term> ::= <term> <mulop> <factor> 
+ //          | <factor>
+
+ // <mulop> ::= * 
+ //           | /  
+
+ // <factor> ::= (<expression>) 
+ //            | <var> 
+ //            | <call> 
+ //            | NUM  
+
+ // <call> ::= ID(<args>)  
+
+ // <args> ::= <arg-list>
+ //          | empty  
+
+ // <arg-list> ::= <arg-list>, <expression>
+ //              | <expression> 

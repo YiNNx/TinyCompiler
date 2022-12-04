@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:51:11
- * @LastEditTime: 2022-12-04 12:43:22
+ * @LastEditTime: 2022-12-04 18:13:22
  * @Description: Helper functions for lexer
  */
 
@@ -47,28 +47,30 @@ bool compareWithKeywords(char* word, int* token) {
 // Get a single contiguous int number
 int getDigitInt(char c) {
     int num = 0;
+    back();
     while (isdigit(c) && c != -1) {
+        next();
         int d = charToInt(c);
-        c = next();
+        c = check();
         num = num * 10 + d;
     }
     if (isalpha(c)) {
         exitWithErr("variable name or function name can't begin with digit", 1);
     }
-    if (c != -1) back();
     return num;
 }
 
 // Get a single contiguous string
 void getWord(char c, char* word) {
     int j = 0;
+    back();
     while (isalpha(c) || (isdigit(c) && c != -1) || isUnderline(c)) {
+        next();
         word[j++] = c;
-        c = next();
+        c = check();
         if (j >= MAX_VAR_NAME) {
             exitWithErr("variable name or function name too long", 1);
         }
     }
     word[j] = '\0';
-    if (c != -1) back();
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-04 15:14:36
+ * @LastEditTime: 2022-12-04 17:13:42
  * @Description:
  */
 
@@ -11,9 +11,17 @@
 #include "ast.h"
 #include"utils.h"
 
-ASTNode* expr(Token** t);
+ASTNode* expression(Token** t);
 
-ASTNode* exprTail(Token** t);
+ASTNode* simpleExpr(Token** t);
+
+ASTNode* simpleExprTail(Token** t);
+
+ASTNode* relop(Token** t);
+
+ASTNode* addExpr(Token** t);
+
+ASTNode* addExprTail(Token** t);
 
 ASTNode* addop(Token** t);
 

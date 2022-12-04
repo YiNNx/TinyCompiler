@@ -76,12 +76,12 @@ main() input() output()
                 | return <expression>;  
                   
 <expression> ::= <var> = <expression>
-               | <simple-expression>
+               | <simple-expr>
                
 <var> ::= ID
 
-<simple-expression> ::= <expr> <relop> <expr>
-                      | <expr>
+<simple-expr> ::= <add-expr> <relop> <add-expr>
+                      | <add-expr>
                       
 <relop> ::= <= 
           | < 
@@ -92,7 +92,7 @@ main() input() output()
           | && 
           | ||  
         
-<expr> ::= <expr> <addop> <term> 
+<add-expr> ::= <add-expr> <addop> <term> 
                | <term>
                         
 <addop> ::= + 

@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-04 15:19:40
+ * @LastEditTime: 2022-12-04 18:15:00
  * @Description: Core lexer functions
  */
 
@@ -16,9 +16,10 @@ void lexer(char* codeStr, Token** head) {
     (*head) = p;
     while (c != -1) {
         Token* t = match(c);
+        c = skipWhite();
+        if (t->token == COMMENT) continue;
         p->next = t;
         p = p->next;
-        c = skipWhite();
     }
     p->next = NULL;
     free(codeStr);
@@ -41,7 +42,7 @@ Token* match(char c) {
     case '/':
         if (check() == '*') {
             next();
-            while (next() != '*' && check() != '/');
+            while (next() != '*' || check() != '/');
             t->token = COMMENT;
             next();
         }
@@ -120,13 +121,12 @@ Token* match(char c) {
             else {
                 t->wordVal = (char*)malloc(sizeof(char) * MAX_VAR_NAME);
                 strcpy(t->wordVal, word);
-                if (skipWhite() == '(') {
+                if (checkSkipWhite() == '(') {
                     t->token = FUNC;
                 }
                 else {
                     t->token = VAR;
                 }
-                back();
             }
         }
         else if (isWhite(c)) {

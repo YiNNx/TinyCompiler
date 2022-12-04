@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 18:00:01
- * @LastEditTime: 2022-12-04 12:30:42
+ * @LastEditTime: 2022-12-04 18:09:17
  * @Description: Helper functions to get each char of the code content
  */
 
@@ -33,7 +33,7 @@ char check() {
 // And the pointer turns to the next char
 char next() {
     if (codeStr[pointer] != '\0') {
-        return codeStr[pointer++]; 
+        return codeStr[pointer++];
     }
     else {
         return -1;
@@ -47,6 +47,14 @@ char skipWhite() {
         c = next();
     }
     return c;
+}
+
+char checkSkipWhite() {
+    int i = pointer;
+    while (isWhite(codeStr[i])) {
+        i++;
+    }
+    return codeStr[i];
 }
 
 // Turn the pointer back

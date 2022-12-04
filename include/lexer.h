@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 16:00:18
- * @LastEditTime: 2022-12-04 12:04:21
+ * @LastEditTime: 2022-12-04 17:55:24
  * @Description: Header file for lexer
  */
 
@@ -33,5 +33,7 @@ char check();
 char next();
 
 char skipWhite();
+
+char checkSkipWhite();
 
 void back();

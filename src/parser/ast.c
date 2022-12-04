@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-04 15:44:34
+ * @LastEditTime: 2022-12-04 16:48:03
  * @Description: AST
  */
 
@@ -9,8 +9,8 @@
 #include "utils.h"
 
 char* nodeTypes[] = {
-    "int",
-    "IDENT",
+    "num",
+    "var",
     "IF",
     "WHILE",
     "RETURN",
@@ -61,10 +61,13 @@ void printSubTree(const char* prefix, const ASTNode* node, bool isLeft)
 
 void printNode(const ASTNode* n) {
     if (n->op == NODE_INT_NUM) {
-        printf("%s: %d\n", nodeTypes[n->op], n->v.intvalue);
+        printf("%d\n", n->v.intvalue);
     }
     else if (n->op == NODE_FUNCCALL) {
         printf("%s: %s\n", nodeTypes[n->op], n->v.id);
+    }
+    else if (n->op == NODE_IDENT) {
+        printf("%s\n", n->v.id);
     }
     else {
         printf("%s\n", nodeTypes[n->op]);

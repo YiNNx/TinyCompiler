@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:00:30
- * @LastEditTime: 2022-12-04 15:41:20
+ * @LastEditTime: 2022-12-04 17:17:09
  * @Description: Core parser functions
  */
 
@@ -9,47 +9,146 @@
 #include "utils.h"
 #include "lexer.h"
 
- /* <expr> ::= <term> <expr-tail>
-  *
-  * <expr-tail> ::= <addop> <term> <expr-tail>
-  *               | <empty>
-  *
-  * <addop> ::= +
-  *           | -
-  *
-  * <term> ::= <factor> <term-tail>
-  *
-  * <term-tail> ::= <mulop> <factor> <term-tail>
-  *               | <empty>
-  *
-  * <mulop> ::= *
-  *           | /
-  *
-  * <factor> ::= ( <expr> )
-  *            | Num
-  *            | <var>
-  *            | <call>
-  *
-  * <var> ::= ID
-  *
-  * <call> ::= ID(<args>)
-  *
-  * <args> ::= <arg-list>
-  *          | void
-  *
-  * <arg-list> ::= <expression> <arg-list-tail>
-  *
-  * <arg-list-tail> ::= ,<expression> <arg-list-tail>
-  *                   | empty
-  *
-  *
-  */
+ //  <expression> ::= <var> = <expression>
+ //                 | <simple-expr>
+ // 
+ //  <var> ::= ID
+ // 
+ //  <simple-expr> ::= <add-expr> <simple-expr-tail>
+ // 
+ //  <simple-expr-tail> ::= <relop> <add-expr>
+ //                       | empty   
 
-ASTNode* expr(Token** t) {
+ //  <relop> ::= >
+ //            | <
+ //            | >=
+ //            | <=
+ //            | ==
+ //            | !=
+
+ASTNode* expression(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
+    ASTNode* varNode, * expressionNode, * simpleExprNode;
+    if ((varNode = var(&p)) != NULL &&
+        p->token == ASSIGN &&
+        (p = p->next, (expressionNode = expression(&p)) != NULL))
+    {
+        ASTNode* assignNode = createEmptyNode();
+        assignNode->op = NODE_ASSIGN;
+        assignNode->left = varNode;
+        assignNode->right = expressionNode;
+        *t = p;
+        return assignNode;
+    }
+    else if (p = *t, (simpleExprNode = simpleExpr(&p)) != NULL) {
+        *t = p;
+        return simpleExprNode;
+    }
+    return NULL;
+}
+
+ASTNode* simpleExpr(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
+    ASTNode* n;
+    if ((n = addExpr(&p)) != NULL) {
+        ASTNode* rootNode = n;
+        while ((n = simpleExprTail(&p)) != NULL) {
+            n->left = rootNode;
+            rootNode = n;
+        }
+        return rootNode;
+    }
+    return NULL;
+}
+
+ASTNode* simpleExprTail(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
+    ASTNode* relopNode, * addExprNode;
+    if ((relopNode = relop(&p)) != NULL && (addExprNode = addExpr(&p)) != NULL) {
+        relopNode->right = addExprNode;
+        *t = p;
+        return relopNode;
+    }
+    return NULL;
+}
+
+ASTNode* relop(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
+    ASTNode* n = createEmptyNode();
+    switch (p->token)
+    {
+    case GREATER:
+        n->op = NODE_GREATER;
+        break;
+    case LESS:
+        n->op = NODE_LESS;
+        break;
+    case GREATER_OR_EQL:
+        n->op = NODE_GREATER_OR_EQL;
+        break;
+    case LESS_OR_EQL:
+        n->op = NODE_LESS_OR_EQL;
+        break;
+    case EQL:
+        n->op = NODE_EQL;
+        break;
+    case NOT_EQL:
+        n->op = NODE_NOT_EQL;
+        break;
+    default:
+        free(n);
+        return NULL;
+    }
+    *t = p->next;
+    return n;
+}
+
+//  <add-expr> ::= <term> <add-expr-tail>
+// 
+//  <add-expr-tail> ::= <addop> <term> <add-expr-tail>
+//                    | <empty>
+// 
+//  <addop> ::= +
+//            | -
+
+//  <term> :: = <factor> <term-tail>
+//  
+//  <term-tail> ::= <mulop> <factor> <term-tail>
+//                | <empty>
+//  
+//  <mulop> ::= *
+//            | /
+
+//  <factor> :: = (<add-expr>)
+//             | Num
+//             | <var>
+//             | <call>
+
+//  <var> ::= ID
+// 
+//  <call> ::= ID(<args>)
+
+//  <args> ::= <arg-list>
+//           | void
+// 
+//  <arg-list> ::= <expression> <arg-list-tail>
+// 
+//  <arg-list-tail> ::= ,<expression> <arg-list-tail>
+//                   | empty
+
+ASTNode* addExpr(Token** t) {
     ASTNode* termNode, * exprTailNode;
     if ((termNode = term(t)) != NULL) {
         ASTNode* subRoot = termNode;
-        while ((exprTailNode = exprTail(t)) != NULL) {
+        while ((exprTailNode = addExprTail(t)) != NULL) {
             exprTailNode->left = subRoot;
             subRoot = exprTailNode;
         }
@@ -58,10 +157,14 @@ ASTNode* expr(Token** t) {
     return NULL;
 }
 
-ASTNode* exprTail(Token** t) {
+ASTNode* addExprTail(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
     ASTNode* addopNode, * termNode;
-    if ((addopNode = addop(t)) != NULL && (termNode = term(t)) != NULL) {
+    if ((addopNode = addop(&p)) != NULL && (termNode = term(&p)) != NULL) {
         addopNode->right = termNode;
+        *t = p;
         return addopNode;
     }
     return NULL;
@@ -103,9 +206,13 @@ ASTNode* term(Token** t) {
 }
 
 ASTNode* termTail(Token** t) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
     ASTNode* mulopNode, * factorNode;
-    if ((mulopNode = mulop(t)) != NULL && (factorNode = factor(t)) != NULL) {
+    if ((mulopNode = mulop(&p)) != NULL && (factorNode = factor(&p)) != NULL) {
         mulopNode->right = factorNode;
+        *t = p;
         return mulopNode;
     }
     return NULL;
@@ -142,7 +249,7 @@ ASTNode* factor(Token** t) {
     ASTNode* n;
     if (p->token == LP) {
         p = p->next;
-        if ((n = expr(&p)) != NULL && p->token == RP) {
+        if ((n = addExpr(&p)) != NULL && p->token == RP) {
             *t = p->next;
             return n;
         }
@@ -154,10 +261,10 @@ ASTNode* factor(Token** t) {
         *t = p->next;
         return  n;
     }
-    else if ((n = var(t)) != NULL) {
+    else if ((n = call(t)) != NULL) {
         return n;
     }
-    else if ((n = call(t)) != NULL) {
+    else if ((n = var(t)) != NULL) {
         return n;
     }
     else {
@@ -216,7 +323,7 @@ ASTNode* argList(Token** t) {
         *t = p->next;
         return n;
     }
-    else if ((n = expr(&p)) != NULL) {
+    else if ((n = addExpr(&p)) != NULL) {
         ASTNode* rootNode = n;
         while ((n = argListTail(&p)) != NULL) {
             ASTNode* glue = createGlueNode();
@@ -239,7 +346,7 @@ ASTNode* argListTail(Token** t) {
     ASTNode* n;
     if (p->token == COMMA) {
         p = p->next;
-        if ((n = expr(&p)) != NULL) {
+        if ((n = addExpr(&p)) != NULL) {
             (*t) = p;
             return n;
         }
