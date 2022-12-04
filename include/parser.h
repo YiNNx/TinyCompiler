@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-03 19:15:23
+ * @LastEditTime: 2022-12-04 11:51:09
  * @Description:
  */
 
@@ -11,18 +11,18 @@
 #include "ast.h"
 #include"utils.h"
 
-bool expr(Token** t, ASTNode** n);
+ASTNode* expr(Token** t);
 
-bool exprTail(Token** t, ASTNode** n);
+ASTNode* exprTail(Token** t);
 
-bool addop(Token** t, ASTNode** n);
+ASTNode* addop(Token** t);
 
-bool term(Token** t, ASTNode** n);
+ASTNode* term(Token** t);
 
-bool termTail(Token** t, ASTNode** n);
+ASTNode* termTail(Token** t);
 
-bool mulop(Token** t, ASTNode** n);
+ASTNode* mulop(Token** t);
 
-bool factor(Token** t, ASTNode** n);
+ASTNode* factor(Token** t);
 
-void parser(Token* tokenList);
+ASTNode* parser(Token* tokenList);

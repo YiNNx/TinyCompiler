@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 18:00:01
- * @LastEditTime: 2022-12-01 18:40:30
+ * @LastEditTime: 2022-12-04 12:30:42
  * @Description: Helper functions to get each char of the code content
  */
 
@@ -21,7 +21,7 @@ void initStr(char* s) {
 
 // Get the pointed char in str
 char check() {
-    if (codeStr[pointer] != EOF) {
+    if (codeStr[pointer] != '\0') {
         return codeStr[pointer];
     }
     else {
@@ -32,8 +32,8 @@ char check() {
 // Get the pointed char in str
 // And the pointer turns to the next char
 char next() {
-    if (codeStr[pointer] != EOF) {
-        return codeStr[pointer++];
+    if (codeStr[pointer] != '\0') {
+        return codeStr[pointer++]; 
     }
     else {
         return -1;

@@ -1,13 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:29:59
- * @LastEditTime: 2022-12-03 19:26:41
+ * @LastEditTime: 2022-12-04 12:11:27
  * @Description:
  */
 
 #pragma once
 
 #include "token.h"
+#include"utils.h"
 
 enum ASTNodeType {
     NODE_INT_NUM,
@@ -54,3 +55,7 @@ typedef struct ASTNode {
 void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r);
 
 void printASTree(const ASTNode* root);
+
+ASTNode* getEmptyNode();
+
+void printNode(const ASTNode* n);

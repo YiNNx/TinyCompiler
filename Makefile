@@ -1,6 +1,6 @@
 .PHONY: clean
 
-CC = gcc -std=c1x
+CC = gcc
 
 CFLAGS = -I include 
 CFILES = $(shell find src -name "*.c")
@@ -22,4 +22,4 @@ clean:
 	$(RM) $(TARGET) $(OBJS)
 
 debug:
-	 gcc -I include -g $(CFILES) -o ./test
+	 gcc -I include -g $(CFILES) -o ./testfile

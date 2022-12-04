@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-03 23:41:43
+ * @LastEditTime: 2022-12-04 12:35:48
  * @Description: Core lexer functions
  */
 
@@ -9,13 +9,14 @@
 #include "utils.h"
 
  // Build the lexer using the DFA
-void lexer(char* codeStr, Token* head) {
+void lexer(char* codeStr, Token** head) {
     initStr(codeStr);
     char c = skipWhite();
-    Token* p = head;
-
+    Token* p = (Token*)malloc(sizeof(Token));
+    (*head) = p;
     while (c != -1) {
         Token* t = match(c);
+        printToken(t);
         p->next = t;
         p = p->next;
         c = skipWhite();
@@ -33,14 +34,14 @@ Token* match(char c) {
         t->token = PLUS;
         break;
     case '-':
-        if (isdigit(check())) {
-            int num = getDigitInt(check());
-            t->token = DIGIT_INT;
-            t->intVal = -num;
-        }
-        else {
-            t->token = MINUS;
-        }
+        // if (isdigit(check())) {
+        //     int num = getDigitInt(check());
+        //     t->token = DIGIT_INT;
+        //     t->intVal = -num;
+        // }
+        // else {
+        t->token = MINUS;
+        // }
         break;
     case '*':
         t->token = STAR;
@@ -111,7 +112,7 @@ Token* match(char c) {
         t->token = RC;
         break;
     default:
-        if (isdigit(c)) {
+        if (isdigit(c) && c != -1) {
             int num = getDigitInt(c);
             t->token = DIGIT_INT;
             t->intVal = num;

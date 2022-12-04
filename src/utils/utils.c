@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:11:50
- * @LastEditTime: 2022-12-03 13:48:27
+ * @LastEditTime: 2022-12-04 11:58:11
  * @Description: Util functions
  */
 
@@ -22,7 +22,7 @@ char* readFile(char* path) {
     data = (char*)malloc((length + 1) * sizeof(char));
     rewind(pfile);
     length = fread(data, 1, length, pfile);
-    data[length] = EOF;
+    data[length] = '\0';
     fclose(pfile);
     return data;
 }

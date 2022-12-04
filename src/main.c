@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 08:19:36
- * @LastEditTime: 2022-12-03 20:20:05
+ * @LastEditTime: 2022-12-04 12:07:26
  * @Description: The entry of the program, parse the arguements and read the corresponding .cmm file
  */
 
@@ -11,7 +11,6 @@
 
  // Usage: ./g-- <.cmm file>
 int main(int argc, char* argv[]) {
-
     if (argc != 2) {
         exitWithErr("invalid command.\nusage: ./g-- <.cmm file>", 1);
     }
@@ -22,14 +21,15 @@ int main(int argc, char* argv[]) {
     }
 
     char* codeStr = readFile(filename);
-
+    printf("%s\n------\n",codeStr);
+    
     Token* tokenList;
-    lexer(codeStr, tokenList);
+    lexer(codeStr, &tokenList);
     printTokenList(tokenList);
+    printf("------\n");
 
-    printf("\n------\n");
-
-    parser(tokenList);
+    ASTNode* root = parser(tokenList);
+    printASTree(root);
 
     return 0;
 }

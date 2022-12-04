@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 16:00:18
- * @LastEditTime: 2022-12-03 14:21:01
+ * @LastEditTime: 2022-12-04 12:04:21
  * @Description: Header file for lexer
  */
 
@@ -12,7 +12,7 @@
 
  /* lexer functions */
 
-void lexer(char* codeStr, Token* head);
+void lexer(char* codeStr, Token** head);
 
 Token* match(char c);
 

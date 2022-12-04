@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:00:30
- * @LastEditTime: 2022-12-03 23:24:54
+ * @LastEditTime: 2022-12-04 11:50:03
  * @Description: Core parser functions
  */
 
@@ -38,113 +38,88 @@
   //     return &glue;
   // }
 
-bool expr(Token** t, ASTNode** n) {
-
+ASTNode* expr(Token** t) {
     ASTNode* termNode, * exprTailNode;
-    if (term(t, &termNode)) {
+    if ((termNode = term(t)) != NULL) {
         ASTNode* subRoot = termNode;
-        while (exprTail(t, &exprTailNode)) {
+        while ((exprTailNode = exprTail(t)) != NULL) {
             exprTailNode->left = subRoot;
             subRoot = exprTailNode;
         }
-        (*n) = subRoot;
-        return true;
+        return subRoot;
     }
-
-    return false;
+    return NULL;
 }
 
-bool exprTail(Token** t, ASTNode** n) {
+ASTNode* exprTail(Token** t) {
     ASTNode* addopNode, * termNode;
-    if (addop(t, &addopNode) && term(t, &termNode)) {
+    if ((addopNode = addop(t)) != NULL && (termNode = term(t)) != NULL) {
         addopNode->right = termNode;
-        (*n) = addopNode;
-        return true;
+        return addopNode;
     }
-    return false;
+    return NULL;
 }
 
-bool addop(Token** t, ASTNode** n) {
+ASTNode* addop(Token** t) {
     Token* p = (*t);
+    if (p == NULL) return NULL;
+
     switch (p->token)
     {
     case PLUS:
-        ASTNode plusNode = {
-            .op = NODE_PLUS,
-            .left = NULL,
-            .mid = NULL,
-            .right = NULL,
-        };
-        *n = &plusNode;
+        ASTNode* plusNode = getEmptyNode();
+        plusNode->op = NODE_PLUS;
         *t = p->next;
-        return true;
+        return plusNode;
     case MINUS:
-        ASTNode minusNode = {
-            .op = NODE_MINUS,
-            .left = NULL,
-            .mid = NULL,
-            .right = NULL,
-        };
-        *n = &minusNode;
+        ASTNode* minusNode = getEmptyNode();
+        minusNode->op = NODE_MINUS;
         *t = p->next;
-        return true;
+        return minusNode;
     default:
-        return false;
+        return NULL;
     }
 }
 
-bool term(Token** t, ASTNode** n) {
+ASTNode* term(Token** t) {
     ASTNode* factorNode;
-    if (factor(t, &factorNode)) {
+    if ((factorNode = factor(t)) != NULL) {
         ASTNode* termTailNode;
         ASTNode* subRoot = factorNode;
-        printf("-------%d------\n", subRoot->op);
-        while (termTail(t, &termTailNode)) {
+        while ((termTailNode = termTail(t)) != NULL) {
             termTailNode->left = subRoot;
             subRoot = termTailNode;
         }
-        (*n) = subRoot;
-        printf("=======%d=======\n", subRoot->op);
-        
-        return true;
+        return subRoot;
     }
-    return false;
+    return NULL;
 }
 
-bool termTail(Token** t, ASTNode** n) {
+ASTNode* termTail(Token** t) {
     ASTNode* mulopNode, * factorNode;
-    if (mulop(t, &mulopNode) && factor(t, &factorNode)) {
+    if ((mulopNode = mulop(t)) != NULL && (factorNode = factor(t)) != NULL) {
         mulopNode->right = factorNode;
-        (*n) = mulopNode;
-        return true;
+        return mulopNode;
     }
-    return false;
+    return NULL;
 }
 
-bool mulop(Token** t, ASTNode** n) {
+ASTNode* mulop(Token** t) {
     Token* p = (*t);
+    if (p == NULL) return NULL;
+
     switch (p->token)
     {
     case STAR:
-        ASTNode starNode = {
-            .op = NODE_STAR,
-            .left = NULL,
-            .mid = NULL,
-            .right = NULL,
-        };
-        *n = &starNode;
+        ASTNode* starNode = getEmptyNode();
+        starNode->op = NODE_STAR;
         *t = p->next;
-        return true;
+        return starNode;
     case DIV:
-        ASTNode divNode = {
-            .op = NODE_DIV,
-            .left = NULL,
-            .mid = NULL,
-            .right = NULL,
-        };
-        *n = &divNode;
+        ASTNode* divNode = getEmptyNode();
+        divNode->op = NODE_DIV;
         *t = p->next;
-        return true;
+        return divNode;
     default:
         return false;
     }
@@ -153,36 +128,32 @@ bool mulop(Token** t, ASTNode** n) {
 // Determine if the tokens start from t can form a factor.
 // If it can, return true and t points at the next token after the factor tokens,
 // else, return false and t points at the origin t.
-bool factor(Token** t, ASTNode** n) {
+ASTNode* factor(Token** t) {
     Token* p = (*t);
+    if (p == NULL) return NULL;
+
     if (p->token == LP) {
-        if (expr(&p, n) && p->token == RP) {
+        p = p->next;
+        ASTNode* exprNode;
+        if ((exprNode = expr(&p)) != NULL && p->token == RP) {
             *t = p->next;
-            return true;
+            return exprNode;
         }
     }
     else if (p->token == DIGIT_INT) {
-        ASTNode digitNode = {
-            .op = DIGIT_INT,
-            .v.intvalue = p->intVal,
-            .left = NULL,
-            .mid = NULL,
-            .right = NULL,
-        };
-        *n = &digitNode;
+        ASTNode* digitNode = getEmptyNode();
+        digitNode->op = NODE_INT_NUM;
+        digitNode->v.intvalue = p->intVal;
         *t = p->next;
-        return true;
+        return  digitNode;
     }
     else {
         return false;
     }
 }
 
-void parser(Token* tokenList) {
-    ASTNode* root;
-    expr(&tokenList->next, &root);
-    // printASTree(root);
-    return;
+ASTNode* parser(Token* tokenList) {
+    return expr(&tokenList->next);
 }
 
 
