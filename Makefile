@@ -11,7 +11,6 @@ RM = -rm -f
 
 all: $(TARGET)
 
-
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS)
 

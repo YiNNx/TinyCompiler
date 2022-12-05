@@ -2,7 +2,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 09:49:59
- * @LastEditTime: 2022-12-03 11:21:37
+ * @LastEditTime: 2022-12-05 15:33:39
  * @Description: Statemant for struct Token & Enum for Token types
  */
 
@@ -17,47 +17,47 @@ typedef struct Token {
 
 enum TokenType {
 	// keywords
-	INT,
-	VOID,
-	IF,
-	ELSE,
-	WHILE,
-	RETURN,
+	TOKEN_INT,
+	TOKEN_VOID,
+	TOKEN_IF,
+	TOKEN_ELSE,
+	TOKEN_WHILE,
+	TOKEN_RETURN,
 
 	// white operator
-	WHITE,
+	TOKEN_WHITE,
 
 	//operators
-	PLUS,
-	MINUS,
-	STAR,
-	DIV,
-	ASSIGN,
+	TOKEN_PLUS,
+	TOKEN_MINUS,
+	TOKEN_STAR,
+	TOKEN_DIV,
+	TOKEN_ASSIGN,
 
-	GREATER, // >
-	LESS, // <
-	NOT_EQL, // !=
-	EQL, // ==
-	GREATER_OR_EQL, // >=
-	LESS_OR_EQL, // <=
+	TOKEN_GREATER, // >
+	TOKEN_LESS, // <
+	TOKEN_NOT_EQL, // !=
+	TOKEN_EQL, // ==
+	TOKEN_GREATER_OR_EQL, // >=
+	TOKEN_LESS_OR_EQL, // <=
 
 	// others
-	DIGIT_INT,
-	VAR,
-	FUNC,
+	TOKEN_DIGIT_INT,
+	TOKEN_VAR,
+	TOKEN_FUNC,
 
-	COMMA,
-	SEMI,
-	LP, // (
-	RP, // )
-	LC, // {
-	RC, // }
-	COMMENT, // /* comment */
+	TOKEN_COMMA,
+	TOKEN_SEMI,
+	TOKEN_LP, // (
+	TOKEN_RP, // )
+	TOKEN_LC, // {
+	TOKEN_RC, // }
+	TOKEN_COMMENT, // /* comment */
 
 	// functions
-	MAIN,
-	INPUT,
-	OUTPUT,
+	TOKEN_MAIN,
+	TOKEN_INPUT,
+	TOKEN_OUTPUT,
 };
 
 void printToken(Token* t);

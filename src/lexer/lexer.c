@@ -17,7 +17,7 @@ void lexer(char* codeStr, Token** head) {
     while (c != -1) {
         Token* t = match(c);
         c = skipWhite();
-        if (t->token == COMMENT) continue;
+        if (t->token == TOKEN_COMMENT) continue;
         p->next = t;
         p = p->next;
     }
@@ -31,55 +31,55 @@ Token* match(char c) {
     switch (c)
     {
     case '+':
-        t->token = PLUS;
+        t->token = TOKEN_PLUS;
         break;
     case '-':
-        t->token = MINUS;
+        t->token = TOKEN_MINUS;
         break;
     case '*':
-        t->token = STAR;
+        t->token = TOKEN_STAR;
         break;
     case '/':
         if (check() == '*') {
             next();
             while (next() != '*' || check() != '/');
-            t->token = COMMENT;
+            t->token = TOKEN_COMMENT;
             next();
         }
         else {
-            t->token = DIV;
+            t->token = TOKEN_DIV;
         }
         break;
     case '=':
         if (check() == '=') {
-            t->token = EQL;
+            t->token = TOKEN_EQL;
             next();
         }
         else {
-            t->token = ASSIGN;
+            t->token = TOKEN_ASSIGN;
         }
         break;
     case '>':
         if (check() == '=') {
-            t->token = GREATER_OR_EQL;
+            t->token = TOKEN_GREATER_OR_EQL;
             next();
         }
         else {
-            t->token = GREATER;
+            t->token = TOKEN_GREATER;
         }
         break;
     case '<':
         if (check() == '=') {
-            t->token = LESS_OR_EQL;
+            t->token = TOKEN_LESS_OR_EQL;
             next();
         }
         else {
-            t->token = LESS;
+            t->token = TOKEN_LESS;
         }
         break;
     case '!':
         if (check() == '=') {
-            t->token = NOT_EQL;
+            t->token = TOKEN_NOT_EQL;
             next();
         }
         else {
@@ -87,27 +87,27 @@ Token* match(char c) {
         }
         break;
     case ',':
-        t->token = COMMA;
+        t->token = TOKEN_COMMA;
         break;
     case ';':
-        t->token = SEMI;
+        t->token = TOKEN_SEMI;
         break;
     case '(':
-        t->token = LP;
+        t->token = TOKEN_LP;
         break;
     case ')':
-        t->token = RP;
+        t->token = TOKEN_RP;
         break;
     case '{':
-        t->token = LC;
+        t->token = TOKEN_LC;
         break;
     case '}':
-        t->token = RC;
+        t->token = TOKEN_RC;
         break;
     default:
         if (isdigit(c) && c != -1) {
             int num = getDigitInt(c);
-            t->token = DIGIT_INT;
+            t->token = TOKEN_DIGIT_INT;
             t->intVal = num;
         }
         else if (isalpha(c) || isUnderline(c)) {
@@ -122,10 +122,10 @@ Token* match(char c) {
                 t->wordVal = (char*)malloc(sizeof(char) * MAX_VAR_NAME);
                 strcpy(t->wordVal, word);
                 if (checkSkipWhite() == '(') {
-                    t->token = FUNC;
+                    t->token = TOKEN_FUNC;
                 }
                 else {
-                    t->token = VAR;
+                    t->token = TOKEN_VAR;
                 }
             }
         }

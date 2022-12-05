@@ -1,0 +1,19 @@
+int fibonacci(int n) {
+    if (n <= 0) return 0;
+    else if (n <= 2) return 1;
+    
+    int a;
+    int b;
+    int res;
+    int i;
+    a = b = 1;
+    res = 0;
+    i = 2;
+    while (i < n) {
+        res = a + b;
+        a = b;
+        b = res;
+        i = i + 1;
+    }
+    return res;
+}

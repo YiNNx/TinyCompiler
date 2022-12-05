@@ -53,10 +53,10 @@ void printTokenList(Token* head) {
 
 // Print property of the single Token
 void printToken(Token* t) {
-    if (t->token == DIGIT_INT) {
+    if (t->token == TOKEN_DIGIT_INT) {
         printf("%s: %d,\n", types[t->token], t->intVal);
     }
-    else if (t->token == VAR || t->token == FUNC) {
+    else if (t->token == TOKEN_VAR || t->token == TOKEN_FUNC) {
         printf("%s: %s,\n", types[t->token], t->wordVal);
     }
     else {

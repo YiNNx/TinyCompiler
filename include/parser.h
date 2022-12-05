@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-04 21:33:34
+ * @LastEditTime: 2022-12-05 21:20:13
  * @Description:
  */
 
@@ -58,3 +58,21 @@ ASTNode* selectionStmt(Token** t);
 ASTNode* iterationStmt(Token** t);
 
 ASTNode* returnStmt(Token** t);
+
+int nonVoidTypeSpec(Token** t);
+
+ASTNode* localDeclaration(Token** t);
+
+ASTNode* varDeclaration(Token** t);
+
+ASTNode* funcDeclaration(Token** t);
+
+int typeSpec(Token** t);
+
+ASTNode* params(Token** t);
+
+ASTNode* paramList(Token** t);
+
+ASTNode* paramListTail(Token** t);
+
+ASTNode* param(Token** t);

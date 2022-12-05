@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-04 22:25:42
+ * @LastEditTime: 2022-12-05 21:49:32
  * @Description: AST
  */
 
@@ -11,26 +11,35 @@
 char* nodeTypes[] = {
     "num",
     "var",
-    "IF",
-    "WHILE",
-    "RETURN",
+    "if",
+    "while",
+    "return",
     "+",
     "-",
     "*",
     "/",
     "=",
-    "GREATER",
-    "LESS",
-    "NOT_EQL",
-    "EQL",
-    "GREATER_OR_EQL",
-    "LESS_OR_EQL",
-    "FUNCTION",
+    ">",
+    "<",
+    "!=",
+    "==",
+    ">=",
+    "<=",
+    "var",
+    "func",
     "CALL",
+    "{}",
     "GLUE",
     "EMPTY",
 };
 
+
+char* varTypes[] = {
+    "int",
+    "void",
+};
+
+bool isRoot = true;
 
 void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r) {
     root->left = l;
@@ -38,43 +47,52 @@ void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r) {
     root->right = r;
 }
 
-void printSubTree(const char* prefix, const ASTNode* node, bool isLeft)
+void printSubTree(const char* prefix, const ASTNode* node, bool isLeft, const ASTNode* parent)
 {
     if (node != NULL)
     {
-        char l[100];
-        char r[100];
+        char p[100];
 
         if (node->op != NODE_GLUE) {
-            printf(prefix);
-            printf("└── ");
-
+            if (!isRoot) {
+                printf(prefix);
+                printf("└── ");
+            }
+            else {
+                isRoot = false;
+            }
             // print the value of the node
             printNode(node);
 
-            sprintf(l, "%s%s", prefix, (isLeft ? "│   " : "    "));
-            sprintf(r, "%s%s", prefix, (isLeft ? "│   " : "    "));
+            sprintf(p, "%s%s", prefix, (isLeft ? "│   " : "    "));
         }
         else {
-            sprintf(l, "%s", prefix);
-            sprintf(r, "%s", prefix);
+            sprintf(p, "%s", prefix);
         }
 
         // enter the next tree level - left and right branch
-        printSubTree(l, node->left, true);
-        printSubTree(r, node->mid, false);
-        printSubTree(r, node->right, false);
+        printSubTree(p, node->left, true, node);
+        if (node->right != NULL)printSubTree(p, node->mid, true, node);
+        else printSubTree(p, node->mid, false, node);
+        if (node->op == NODE_GLUE && parent != NULL && parent->op == NODE_GLUE)printSubTree(p, node->right, true, node);
+        else printSubTree(p, node->right, false, node);
     }
 }
 
 void printNode(const ASTNode* n) {
-    if (n->op == NODE_INT_NUM) {
+    if (n->op == NODE_DIGIT_INT) {
         printf("%d\n", n->v.intvalue);
     }
-    else if (n->op == NODE_FUNCCALL) {
+    else if (n->op == NODE_FUNC_DECLARE) {
+        printf("%s: %s, ret %s \n",  nodeTypes[n->op], n->v.var.id,varTypes[n->v.var.type]);
+    }
+    else if (n->op == NODE_VAR_DECLARE) {
+        printf("%s %s: %s\n", varTypes[n->v.var.type], nodeTypes[n->op], n->v.var.id);
+    }
+    else if (n->op == NODE_FUNC_CALL) {
         printf("%s: %s\n", nodeTypes[n->op], n->v.id);
     }
-    else if (n->op == NODE_IDENT) {
+    else if (n->op == NODE_VAR) {
         printf("%s\n", n->v.id);
     }
     else {
@@ -84,7 +102,7 @@ void printNode(const ASTNode* n) {
 
 void printASTree(const ASTNode* root)
 {
-    printSubTree("", root, false);
+    printSubTree("", root, false, NULL);
 }
 
 ASTNode* createEmptyNode() {
@@ -102,3 +120,4 @@ ASTNode* createGlueNode() {
     node->right = NULL;
     node->op = NODE_GLUE;
 }
+

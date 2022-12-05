@@ -118,15 +118,23 @@ main() input() output()
              | <expression> 
 ```
 
+## After Elimination of Left Recursion
+
+```
+T
+```
+
 ## Example Code
 
 ```
-/* for the nth fibonacci num */
 int fibonacci(int n) {
     if (n <= 0) return 0;
     else if (n <= 2) return 1;
-
-    int a, b, res, i;
+    
+    int a;
+    int b;
+    int res;
+    int i;
     a = b = 1;
     res = 0;
     i = 2;
@@ -138,52 +146,47 @@ int fibonacci(int n) {
     }
     return res;
 }
-
-void main(void) {
-    int n, res;
-    n = input();
-    res = fibonacci(n);
-    output(res);
-}
 ```
 
 ## Lexer
 
 ```
-COMMENT,
 INT,
 FUNC: fibonacci,
-LC,
+LP,
 INT,
 VAR: n,
-RC,
-LP,
-IF,
+RP,
 LC,
+IF,
+LP,
 VAR: n,
 LESS_OR_EQL,
 DIGIT_INT: 0,
-RC,
+RP,
 RETURN,
 DIGIT_INT: 0,
 SEMI,
 ELSE,
 IF,
-LC,
+LP,
 VAR: n,
 LESS_OR_EQL,
 DIGIT_INT: 2,
-RC,
+RP,
 RETURN,
 DIGIT_INT: 1,
 SEMI,
 INT,
 VAR: a,
-COMMA,
+SEMI,
+INT,
 VAR: b,
-COMMA,
+SEMI,
+INT,
 VAR: res,
-COMMA,
+SEMI,
+INT,
 VAR: i,
 SEMI,
 VAR: a,
@@ -201,12 +204,12 @@ ASSIGN,
 DIGIT_INT: 2,
 SEMI,
 WHILE,
-LC,
+LP,
 VAR: i,
 LESS,
 VAR: n,
-RC,
-LP,
+RP,
+LC,
 VAR: res,
 ASSIGN,
 VAR: a,
@@ -227,105 +230,68 @@ VAR: i,
 PLUS,
 DIGIT_INT: 1,
 SEMI,
-RP,
+RC,
 RETURN,
 VAR: res,
 SEMI,
-RP,
-VOID,
-MAIN,
-LC,
-VOID,
-RC,
-LP,
-INT,
-VAR: n,
-COMMA,
-VAR: res,
-SEMI,
-VAR: n,
-ASSIGN,
-INPUT,
-LC,
-RC,
-SEMI,
-VAR: res,
-ASSIGN,
-FUNC: fibonacci,
-LC,
-VAR: n,
-RC,
-SEMI,
-OUTPUT,
-LC,
-VAR: res,
-RC,
-SEMI,
-RP
+RC
 ```
 
 ## AST
 
 ```
-FUNCTION fibonacci
-  ASSIGN
-    ASSIGN
-      INTLIT 1
-      IDENT b
-    IDENT a
-  ASSIGN
-    INTLIT 0
-    IDENT res
-  ASSIGN
-    INTLIT 2
-    IDENT i
-  IF, end L2
-    LE
-      IDENT rval n
-      INTLIT 0
-    RETURN
-      WIDEN
-        INTLIT 0
-    IF
-      LE
-        IDENT rval n
-        INTLIT 2
-      RETURN
-        WIDEN
-          INTLIT 1
-  WHILE, start L4
-    LT
-      IDENT rval i
-      IDENT rval n
-    ASSIGN
-      ADD
-        IDENT rval a
-        IDENT rval b
-      IDENT res
-    ASSIGN
-      IDENT rval b
-      IDENT a
-    ASSIGN
-      IDENT rval res
-      IDENT b
-    ASSIGN
-      ADD
-        IDENT rval i
-        INTLIT 1
-      IDENT i
-  RETURN
-    IDENT rval res
-
-FUNCTION main
-  ASSIGN
-    FUNCCALL input
-    IDENT n
-  ASSIGN
-    FUNCCALL fibonacci
-      IDENT rval n
-    IDENT res
-  FUNCCALL output
-    IDENT rval res
-
+func: fibonacci, ret int 
+    └── int var: n
+    └── {}
+        └── if
+        │   └── <=
+        │   │   └── n
+        │   │   └── 0
+        │   └── return
+        │   │   └── 0
+        │   └── if
+        │       └── <=
+        │       │   └── n
+        │       │   └── 2
+        │       └── return
+        │           └── 1
+        └── int var: a
+        └── int var: b
+        └── int var: res
+        └── int var: i
+        └── =
+        │   └── a
+        │   └── =
+        │       └── b
+        │       └── 1
+        └── =
+        │   └── res
+        │   └── 0
+        └── =
+        │   └── i
+        │   └── 2
+        └── while
+        │   └── <
+        │   │   └── i
+        │   │   └── n
+        │   └── {}
+        │       └── =
+        │       │   └── res
+        │       │   └── +
+        │       │       └── a
+        │       │       └── b
+        │       └── =
+        │       │   └── a
+        │       │   └── b
+        │       └── =
+        │       │   └── b
+        │       │   └── res
+        │       └── =
+        │           └── i
+        │           └── +
+        │               └── i
+        │               └── 1
+        └── return
+            └── res
 ```
 

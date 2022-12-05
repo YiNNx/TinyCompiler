@@ -32,7 +32,7 @@ ASTNode* expression(Token** t) {
 
     ASTNode* varNode, * expressionNode, * simpleExprNode;
     if ((varNode = var(&p)) != NULL &&
-        p != NULL && p->token == ASSIGN &&
+        p != NULL && p->token == TOKEN_ASSIGN &&
         (p = p->next, (expressionNode = expression(&p)) != NULL))
     {
         ASTNode* assignNode = createEmptyNode();
@@ -86,22 +86,22 @@ ASTNode* relop(Token** t) {
     ASTNode* n = createEmptyNode();
     switch (p->token)
     {
-    case GREATER:
+    case TOKEN_GREATER:
         n->op = NODE_GREATER;
         break;
-    case LESS:
+    case TOKEN_LESS:
         n->op = NODE_LESS;
         break;
-    case GREATER_OR_EQL:
+    case TOKEN_GREATER_OR_EQL:
         n->op = NODE_GREATER_OR_EQL;
         break;
-    case LESS_OR_EQL:
+    case TOKEN_LESS_OR_EQL:
         n->op = NODE_LESS_OR_EQL;
         break;
-    case EQL:
+    case TOKEN_EQL:
         n->op = NODE_EQL;
         break;
-    case NOT_EQL:
+    case TOKEN_NOT_EQL:
         n->op = NODE_NOT_EQL;
         break;
     default:
@@ -177,12 +177,12 @@ ASTNode* addop(Token** t) {
 
     switch (p->token)
     {
-    case PLUS:
+    case TOKEN_PLUS:
         ASTNode* plusNode = createEmptyNode();
         plusNode->op = NODE_PLUS;
         *t = p->next;
         return plusNode;
-    case MINUS:
+    case TOKEN_MINUS:
         ASTNode* minusNode = createEmptyNode();
         minusNode->op = NODE_MINUS;
         *t = p->next;
@@ -225,12 +225,12 @@ ASTNode* mulop(Token** t) {
 
     switch (p->token)
     {
-    case STAR:
+    case TOKEN_STAR:
         ASTNode* starNode = createEmptyNode();
         starNode->op = NODE_STAR;
         *t = p->next;
         return starNode;
-    case DIV:
+    case TOKEN_DIV:
         ASTNode* divNode = createEmptyNode();
         divNode->op = NODE_DIV;
         *t = p->next;
@@ -248,16 +248,16 @@ ASTNode* factor(Token** t) {
     if (p == NULL) return NULL;
 
     ASTNode* n;
-    if (p->token == LP) {
+    if (p->token == TOKEN_LP) {
         p = p->next;
-        if ((n = addExpr(&p)) != NULL && p != NULL && p->token == RP) {
+        if ((n = addExpr(&p)) != NULL && p != NULL && p->token == TOKEN_RP) {
             *t = p->next;
             return n;
         }
     }
-    else if (p->token == DIGIT_INT) {
+    else if (p->token == TOKEN_DIGIT_INT) {
         n = createEmptyNode();
-        n->op = NODE_INT_NUM;
+        n->op = NODE_DIGIT_INT;
         n->v.intvalue = p->intVal;
         *t = p->next;
         return  n;
@@ -278,16 +278,16 @@ ASTNode* call(Token** t) {
     if (p == NULL) return NULL;
 
     ASTNode* n;
-    if (p->token == FUNC && p->next != NULL && p->next->token == LP) {
+    if (p->token == TOKEN_FUNC && p->next != NULL && p->next->token == TOKEN_LP) {
         ASTNode* funcNode = createEmptyNode();
-        funcNode->op = NODE_FUNCCALL;
+        funcNode->op = NODE_FUNC_CALL;
         funcNode->v.id = p->wordVal;
         p = p->next->next;
-        if (p != NULL && p->token == RP) {
+        if (p != NULL && p->token == TOKEN_RP) {
             (*t) = p->next;
             return funcNode;
         }
-        if ((n = args(&p)) != NULL && p != NULL && p->token == RP) {
+        if ((n = args(&p)) != NULL && p != NULL && p->token == TOKEN_RP) {
             funcNode->left = n->op == NODE_EMPTY ? NULL : n;
             (*t) = p->next;
             return funcNode;
@@ -301,7 +301,7 @@ ASTNode* args(Token** t) {
     if (p == NULL) return NULL;
 
     ASTNode* n;
-    if (p->token == VOID) {
+    if (p->token == TOKEN_VOID) {
         n = createEmptyNode();
         *t = p->next;
         return n;
@@ -319,7 +319,7 @@ ASTNode* argList(Token** t) {
     if (p == NULL) return NULL;
 
     ASTNode* n;
-    if (p->token == VOID) {
+    if (p->token == TOKEN_VOID) {
         ASTNode* n = createEmptyNode();
         *t = p->next;
         return n;
@@ -345,7 +345,7 @@ ASTNode* argListTail(Token** t) {
     if (p == NULL) return NULL;
 
     ASTNode* n;
-    if (p->token == COMMA) {
+    if (p->token == TOKEN_COMMA) {
         p = p->next;
         if ((n = addExpr(&p)) != NULL) {
             (*t) = p;
@@ -359,9 +359,9 @@ ASTNode* var(Token** t) {
     Token* p = (*t);
     if (p == NULL) return NULL;
 
-    if (p->token == VAR) {
+    if (p->token == TOKEN_VAR) {
         ASTNode* n = createEmptyNode();
-        n->op = NODE_IDENT;
+        n->op = NODE_VAR;
         n->v.id = p->wordVal;
         *t = p->next;
         return n;

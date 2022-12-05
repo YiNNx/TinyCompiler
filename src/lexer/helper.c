@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:51:11
- * @LastEditTime: 2022-12-04 18:13:22
+ * @LastEditTime: 2022-12-05 13:17:10
  * @Description: Helper functions for lexer
  */
 
@@ -12,31 +12,31 @@
  // Compare the word with keywords, and return the corresponding enum value
 bool compareWithKeywords(char* word, int* token) {
     if (strcmp(word, "int") == 0) {
-        *token = INT;
+        *token = TOKEN_INT;
     }
     else if (strcmp(word, "void") == 0) {
-        *token = VOID;
+        *token = TOKEN_VOID;
     }
     else if (strcmp(word, "if") == 0) {
-        *token = IF;
+        *token = TOKEN_IF;
     }
     else if (strcmp(word, "else") == 0) {
-        *token = ELSE;
+        *token = TOKEN_ELSE;
     }
     else if (strcmp(word, "while") == 0) {
-        *token = WHILE;
+        *token = TOKEN_WHILE;
     }
     else if (strcmp(word, "return") == 0) {
-        *token = RETURN;
+        *token = TOKEN_RETURN;
     }
     else if (strcmp(word, "main") == 0) {
-        *token = MAIN;
+        *token = TOKEN_MAIN;
     }
     else if (strcmp(word, "input") == 0) {
-        *token = INPUT;
+        *token = TOKEN_INPUT;
     }
     else if (strcmp(word, "output") == 0) {
-        *token = OUTPUT;
+        *token = TOKEN_OUTPUT;
     }
     else {
         return false;
@@ -44,7 +44,7 @@ bool compareWithKeywords(char* word, int* token) {
     return true;
 }
 
-// Get a single contiguous int number
+// Get a single contiguous number
 int getDigitInt(char c) {
     int num = 0;
     back();
@@ -60,7 +60,7 @@ int getDigitInt(char c) {
     return num;
 }
 
-// Get a single contiguous string
+// Get a single contiguous word
 void getWord(char c, char* word) {
     int j = 0;
     back();
