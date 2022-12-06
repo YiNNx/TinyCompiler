@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 23:49:40
- * @LastEditTime: 2022-12-05 21:33:42
+ * @LastEditTime: 2022-12-06 00:31:23
  * @Description:
  */
 
@@ -15,14 +15,18 @@
  //                    | void
 
  // <params> ::= <params-list>
- //            | void  
+ //            | void
+ //            | empty
 
  // <param-list> ::= <param> <param-list-tail>
 
  // <param-list-tail> ::= ,<param> <param-list-tail>
  //                     | empty
 
- // <param> ::= <non-void-type-specifier> ID
+ // <param> ::= <non-void-type-specifier> ID <param-tail>
+
+ // <param-tail> ::= ,ID <param-tail>
+ //                | empty
 
 ASTNode* funcDeclaration(Token** t) {
     Token* p = (*t);
@@ -83,8 +87,10 @@ ASTNode* params(Token** t) {
         *t = p->next;
         return createEmptyNode();
     }
-    return NULL;
+    return createEmptyNode();
 }
+
+
 
 ASTNode* paramList(Token** t) {
     ASTNode* n;

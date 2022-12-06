@@ -2,10 +2,7 @@ int fibonacci(int n) {
     if (n <= 0) return 0;
     else if (n <= 2) return 1;
     
-    int a;
-    int b;
-    int res;
-    int i;
+    int a, b, res, i;
     a = b = 1;
     res = 0;
     i = 2;
@@ -16,4 +13,12 @@ int fibonacci(int n) {
         i = i + 1;
     }
     return res;
+}
+
+int main() {
+    int n, res;
+    n = input();
+    res = fibonacci(n);
+    output(res);
+    return 0;
 }

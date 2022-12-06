@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-05 21:49:32
+ * @LastEditTime: 2022-12-06 00:09:22
  * @Description: AST
  */
 
@@ -39,7 +39,6 @@ char* varTypes[] = {
     "void",
 };
 
-bool isRoot = true;
 
 void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r) {
     root->left = l;
@@ -54,13 +53,8 @@ void printSubTree(const char* prefix, const ASTNode* node, bool isLeft, const AS
         char p[100];
 
         if (node->op != NODE_GLUE) {
-            if (!isRoot) {
-                printf(prefix);
-                printf("└── ");
-            }
-            else {
-                isRoot = false;
-            }
+            printf(prefix);
+            printf("└── ");
             // print the value of the node
             printNode(node);
 
@@ -84,7 +78,7 @@ void printNode(const ASTNode* n) {
         printf("%d\n", n->v.intvalue);
     }
     else if (n->op == NODE_FUNC_DECLARE) {
-        printf("%s: %s, ret %s \n",  nodeTypes[n->op], n->v.var.id,varTypes[n->v.var.type]);
+        printf("%s: %s, ret %s \n", nodeTypes[n->op], n->v.var.id, varTypes[n->v.var.type]);
     }
     else if (n->op == NODE_VAR_DECLARE) {
         printf("%s %s: %s\n", varTypes[n->v.var.type], nodeTypes[n->op], n->v.var.id);

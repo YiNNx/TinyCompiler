@@ -1,14 +1,14 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 13:51:34
- * @LastEditTime: 2022-12-05 22:52:52
+ * @LastEditTime: 2022-12-06 00:03:44
  * @Description:
  */
 
 #include"parser.h"
 
 ASTNode* parser(Token* tokenList) {
-    return funcDeclaration(&tokenList->next);
+    return program(&tokenList->next);
 }
 
 

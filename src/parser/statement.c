@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 18:56:40
- * @LastEditTime: 2022-12-05 21:31:20
+ * @LastEditTime: 2022-12-06 09:38:00
  * @Description:
  */
 
@@ -37,14 +37,16 @@
  // <non-void-type-specifier> ::= int
 
 ASTNode* statementList(Token** t) {
+    bool isEmpty = true;
     ASTNode* rootNode = NULL, * n;
     while ((n = statement(t)) != NULL) {
+        isEmpty = false;
         ASTNode* glueNode = createGlueNode();
         glueNode->left = rootNode;
         glueNode->right = n;
         rootNode = glueNode;
     }
-    return rootNode;
+    return isEmpty ? createEmptyNode() : rootNode;
 }
 
 ASTNode* statement(Token** t) {
@@ -166,7 +168,7 @@ ASTNode* compoundStmt(Token** t) {
     {
         ASTNode* compoundNode = createEmptyNode();
         compoundNode->op = NODE_COMPOUND;
-        compoundNode->left = n;
+        compoundNode->left = n->op == NODE_EMPTY ? NULL : n;
         *t = p->next;
         return compoundNode;
     }
@@ -179,17 +181,45 @@ ASTNode* varDeclaration(Token** t) {
 
     int type;
     if ((type = nonVoidTypeSpec(&p)) != -1 &&
-        p != NULL && p->token == TOKEN_VAR &&
-        p->next != NULL && p->next->token == TOKEN_SEMI) {
+        p != NULL && p->token == TOKEN_VAR) {
         ASTNode* declareNode = createEmptyNode();
         declareNode->op = NODE_VAR_DECLARE;
         declareNode->v.var.id = p->wordVal;
+        declareNode->v.var.type = type;
+        p = p->next;
+
+        ASTNode* n, * subRoot;
+        subRoot = declareNode;
+        while ((n = varDeclTail(&p, type)) != NULL) {
+            ASTNode* glueNode = createGlueNode();
+            glueNode->left = subRoot;
+            glueNode->right = n;
+            subRoot = glueNode;
+        }
+        if (p != NULL && p->token == TOKEN_SEMI) {
+            *t = p->next;
+            return subRoot;
+        }
+    }
+    return NULL;
+}
+
+ASTNode* varDeclTail(Token** t, int type) {
+    Token* p = (*t);
+    if (p == NULL) return NULL;
+
+    ASTNode* n;
+    if (p->token == TOKEN_COMMA && p->next != NULL && p->next->token == TOKEN_VAR) {
+        ASTNode* declareNode = createEmptyNode();
+        declareNode->op = NODE_VAR_DECLARE;
+        declareNode->v.var.id = p->next->wordVal;
         declareNode->v.var.type = type;
         (*t) = p->next->next;
         return declareNode;
     }
     return NULL;
 }
+
 
 int nonVoidTypeSpec(Token** t) {
     Token* p = (*t);

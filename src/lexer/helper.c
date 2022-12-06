@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:51:11
- * @LastEditTime: 2022-12-05 13:17:10
+ * @LastEditTime: 2022-12-06 00:07:00
  * @Description: Helper functions for lexer
  */
 
@@ -29,15 +29,15 @@ bool compareWithKeywords(char* word, int* token) {
     else if (strcmp(word, "return") == 0) {
         *token = TOKEN_RETURN;
     }
-    else if (strcmp(word, "main") == 0) {
-        *token = TOKEN_MAIN;
-    }
-    else if (strcmp(word, "input") == 0) {
-        *token = TOKEN_INPUT;
-    }
-    else if (strcmp(word, "output") == 0) {
-        *token = TOKEN_OUTPUT;
-    }
+    // else if (strcmp(word, "main") == 0) {
+    //     *token = TOKEN_MAIN;
+    // }
+    // else if (strcmp(word, "input") == 0) {
+    //     *token = TOKEN_INPUT;
+    // }
+    // else if (strcmp(word, "output") == 0) {
+    //     *token = TOKEN_OUTPUT;
+    // }
     else {
         return false;
     }

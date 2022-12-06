@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 15:46:36
- * @LastEditTime: 2022-12-05 21:20:13
+ * @LastEditTime: 2022-12-06 00:46:01
  * @Description:
  */
 
@@ -76,3 +76,13 @@ ASTNode* paramList(Token** t);
 ASTNode* paramListTail(Token** t);
 
 ASTNode* param(Token** t);
+
+ASTNode* varDeclTail(Token** t, int type);
+
+ASTNode* program(Token** t);
+
+ASTNode* declarationList(Token** t);
+
+ASTNode* declarationListTail(Token** t);
+
+ASTNode* declaration(Token** t);

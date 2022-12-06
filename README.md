@@ -46,6 +46,7 @@ main() input() output()
 
 <params> ::= <params-list>
            | void  
+           | empty
 
 <param-list> ::= <param-list>,<param>
                | <param>
@@ -142,6 +143,7 @@ main() input() output()
 
 <params> ::= <params-list>
            | void  
+           
 
 <param-list> ::= <param> <param-list-tail>
 
