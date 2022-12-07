@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 15:55:43
- * @LastEditTime: 2022-12-04 13:47:39
+ * @LastEditTime: 2022-12-06 12:57:00
  * @Description: Helper functions for token
  */
 
@@ -49,17 +49,18 @@ void printTokenList(Token* head) {
         printToken(p);
         p = p->next;
     }
+    printf("\n");
 }
 
 // Print property of the single Token
 void printToken(Token* t) {
     if (t->token == TOKEN_DIGIT_INT) {
-        printf("%s: %d,\n", types[t->token], t->intVal);
+        printf("%s: %d, ", types[t->token], t->intVal);
     }
     else if (t->token == TOKEN_VAR || t->token == TOKEN_FUNC) {
-        printf("%s: %s,\n", types[t->token], t->wordVal);
+        printf("%s: %s, ", types[t->token], t->wordVal);
     }
     else {
-        printf("%s,\n", types[t->token]);
+        printf("%s, ", types[t->token]);
     }
 }

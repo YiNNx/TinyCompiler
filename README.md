@@ -143,7 +143,7 @@ main() input() output()
 
 <params> ::= <params-list>
            | void  
-           
+           | empty
 
 <param-list> ::= <param> <param-list-tail>
 
@@ -233,10 +233,7 @@ int fibonacci(int n) {
     if (n <= 0) return 0;
     else if (n <= 2) return 1;
     
-    int a;
-    int b;
-    int res;
-    int i;
+    int a, b, res, i;
     a = b = 1;
     res = 0;
     i = 2;
@@ -248,152 +245,92 @@ int fibonacci(int n) {
     }
     return res;
 }
+
+int main() {
+    int n, res;
+    n = input();
+    res = fibonacci(n);
+    output(res);
+    return 0;
+}
 ```
 
 ## Lexer
 
 ```
-INT,
-FUNC: fibonacci,
-LP,
-INT,
-VAR: n,
-RP,
-LC,
-IF,
-LP,
-VAR: n,
-LESS_OR_EQL,
-DIGIT_INT: 0,
-RP,
-RETURN,
-DIGIT_INT: 0,
-SEMI,
-ELSE,
-IF,
-LP,
-VAR: n,
-LESS_OR_EQL,
-DIGIT_INT: 2,
-RP,
-RETURN,
-DIGIT_INT: 1,
-SEMI,
-INT,
-VAR: a,
-SEMI,
-INT,
-VAR: b,
-SEMI,
-INT,
-VAR: res,
-SEMI,
-INT,
-VAR: i,
-SEMI,
-VAR: a,
-ASSIGN,
-VAR: b,
-ASSIGN,
-DIGIT_INT: 1,
-SEMI,
-VAR: res,
-ASSIGN,
-DIGIT_INT: 0,
-SEMI,
-VAR: i,
-ASSIGN,
-DIGIT_INT: 2,
-SEMI,
-WHILE,
-LP,
-VAR: i,
-LESS,
-VAR: n,
-RP,
-LC,
-VAR: res,
-ASSIGN,
-VAR: a,
-PLUS,
-VAR: b,
-SEMI,
-VAR: a,
-ASSIGN,
-VAR: b,
-SEMI,
-VAR: b,
-ASSIGN,
-VAR: res,
-SEMI,
-VAR: i,
-ASSIGN,
-VAR: i,
-PLUS,
-DIGIT_INT: 1,
-SEMI,
-RC,
-RETURN,
-VAR: res,
-SEMI,
-RC
+INT, FUNC: fibonacci, LP, INT, VAR: n, RP, LC, IF, LP, VAR: n, LESS_OR_EQL, DIGIT_INT: 0, RP, RETURN, DIGIT_INT: 0, SEMI, ELSE, IF, LP, VAR: n, LESS_OR_EQL, DIGIT_INT: 2, RP, RETURN, DIGIT_INT: 1, SEMI, INT, VAR: a, COMMA, VAR: b, COMMA, VAR: res, COMMA, VAR: i, SEMI, VAR: a, ASSIGN, VAR: b, ASSIGN, DIGIT_INT: 1, SEMI, VAR: res, ASSIGN, DIGIT_INT: 0, SEMI, VAR: i, ASSIGN, DIGIT_INT: 2, SEMI, WHILE, LP, VAR: i, LESS, VAR: n, RP, LC, VAR: res, ASSIGN, VAR: a, PLUS, VAR: b, SEMI, VAR: a, ASSIGN, VAR: b, SEMI, VAR: b, ASSIGN, VAR: res, SEMI, VAR: i, ASSIGN, VAR: i, PLUS, DIGIT_INT: 1, SEMI, RC, RETURN, VAR: res, SEMI, RC, INT, FUNC: main, LP, RP, LC, INT, VAR: n, COMMA, VAR: res, SEMI, VAR: n, ASSIGN, FUNC: input, LP, RP, SEMI, VAR: res, ASSIGN, FUNC: fibonacci, LP, VAR: n, RP, SEMI, FUNC: output, LP, VAR: res, RP, SEMI, RETURN, DIGIT_INT: 0, SEMI, RC
 ```
 
 ## AST
 
 ```
-func: fibonacci, ret int 
-    └── int var: n
+└── func: fibonacci, ret int 
+│   └── int var: n
+│   └── {}
+│       └── if
+│       │   └── <=
+│       │   │   └── n
+│       │   │   └── 0
+│       │   └── return
+│       │   │   └── 0
+│       │   └── if
+│       │       └── <=
+│       │       │   └── n
+│       │       │   └── 2
+│       │       └── return
+│       │           └── 1
+│       └── int var: a
+│       └── int var: b
+│       └── int var: res
+│       └── int var: i
+│       └── =
+│       │   └── a
+│       │   └── =
+│       │       └── b
+│       │       └── 1
+│       └── =
+│       │   └── res
+│       │   └── 0
+│       └── =
+│       │   └── i
+│       │   └── 2
+│       └── while
+│       │   └── <
+│       │   │   └── i
+│       │   │   └── n
+│       │   └── {}
+│       │       └── =
+│       │       │   └── res
+│       │       │   └── +
+│       │       │       └── a
+│       │       │       └── b
+│       │       └── =
+│       │       │   └── a
+│       │       │   └── b
+│       │       └── =
+│       │       │   └── b
+│       │       │   └── res
+│       │       └── =
+│       │           └── i
+│       │           └── +
+│       │               └── i
+│       │               └── 1
+│       └── return
+│           └── res
+└── func: main, ret int 
     └── {}
-        └── if
-        │   └── <=
-        │   │   └── n
-        │   │   └── 0
-        │   └── return
-        │   │   └── 0
-        │   └── if
-        │       └── <=
-        │       │   └── n
-        │       │   └── 2
-        │       └── return
-        │           └── 1
-        └── int var: a
-        └── int var: b
+        └── int var: n
         └── int var: res
-        └── int var: i
         └── =
-        │   └── a
-        │   └── =
-        │       └── b
-        │       └── 1
+        │   └── n
+        │   └── CALL: input
         └── =
         │   └── res
-        │   └── 0
-        └── =
-        │   └── i
-        │   └── 2
-        └── while
-        │   └── <
-        │   │   └── i
-        │   │   └── n
-        │   └── {}
-        │       └── =
-        │       │   └── res
-        │       │   └── +
-        │       │       └── a
-        │       │       └── b
-        │       └── =
-        │       │   └── a
-        │       │   └── b
-        │       └── =
-        │       │   └── b
-        │       │   └── res
-        │       └── =
-        │           └── i
-        │           └── +
-        │               └── i
-        │               └── 1
+        │   └── CALL: fibonacci
+        │       └── n
+        └── CALL: output
+        │   └── res
         └── return
-            └── res
+            └── 0
 ```
 

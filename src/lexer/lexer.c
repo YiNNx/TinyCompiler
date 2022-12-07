@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:05:13
- * @LastEditTime: 2022-12-04 18:15:00
+ * @LastEditTime: 2022-12-07 23:23:54
  * @Description: Core lexer functions
  */
 
@@ -22,7 +22,6 @@ void lexer(char* codeStr, Token** head) {
         p = p->next;
     }
     p->next = NULL;
-    free(codeStr);
 }
 
 // Process the current char

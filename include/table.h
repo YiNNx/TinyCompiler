@@ -1,42 +1,46 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-05 11:29:31
- * @LastEditTime: 2022-12-05 16:11:28
+ * @LastEditTime: 2022-12-07 20:07:08
  * @Description:
  */
 
-#include"utils.h"
+#pragma once
+
+#include "utils.h"
 
 enum symbolType {
     SYMBOL_INT,
     SYMBOL_FUNC,
-};
-
-enum scope {
-    SCOPE_GLOBAL,
-    SCOPE_INNER,
+    SYMBOL_SCOPE,
 };
 
 typedef struct Symbol {
-    char* identity;
-    int type;
+    char* identity;       // identity of Symbol
+    int type;             // symbol type
+    struct {
+        int returnType;   // DECL_INT or DECL_VOID
+        int* paramType;
+    } funcProperty;
 }Symbol;
 
-typedef struct SymbolTable {
-    int scope;
-    char* function;
+typedef struct SymbolStack {
     struct Symbol table[MAX_SYMBOL];
-    int size;
+    int pointer;
+}SymbolStack;
 
-    bool isGlue;
-    struct SymbolTable* parent;
-    struct SymbolTable* left;
-    struct SymbolTable* right;
-}SymbolTable;
+void initTable();
 
+// Push scope: Enter a new scope.
+void pushScope();
 
-void initSymbolTable();
+// Pop scope: Leave a scope, discarding all declarations in it.
+void popScope();
 
-void setSymbol(char* identity, int type, int scope, char* function);
+// Insert symbol: Add a new entry to the current scope.
+void insertSymbol(char* id, int type);
 
-int getSymbol(char* varName);
+void insertFuncSymbol(char* id, int type, int returnType, int* params);
+
+// Lookup symbol: Find what a name corresponds to.
+Symbol* lookupSymbol(char* id);
