@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:15:52
- * @LastEditTime: 2022-12-06 00:09:22
+ * @LastEditTime: 2022-12-08 00:46:07
  * @Description: AST
  */
 
@@ -11,26 +11,32 @@
 char* nodeTypes[] = {
     "num",
     "var",
+
     "if",
     "while",
     "return",
+    
     "+",
     "-",
     "*",
     "/",
     "=",
+    
     ">",
     "<",
     "!=",
     "==",
     ">=",
     "<=",
+    
     "var",
     "func",
     "CALL",
     "{}",
+    
     "GLUE",
     "EMPTY",
+    "{}",
 };
 
 

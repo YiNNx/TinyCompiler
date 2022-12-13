@@ -57,3 +57,5 @@ testfile
 bnf.txt
 test.cpp
 test
+report.md
+*.s

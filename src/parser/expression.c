@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-01 10:00:30
- * @LastEditTime: 2022-12-04 21:56:49
+ * @LastEditTime: 2022-12-13 21:52:00
  * @Description: Core parser functions
  */
 
@@ -130,6 +130,7 @@ ASTNode* relop(Token** t) {
 
 //  <factor> :: = (<add-expr>)
 //             | Num
+//             | -Num
 //             | <var>
 //             | <call>
 
@@ -260,6 +261,13 @@ ASTNode* factor(Token** t) {
         n->op = NODE_DIGIT_INT;
         n->v.intvalue = p->intVal;
         *t = p->next;
+        return  n;
+    }
+    else if (p->token == TOKEN_MINUS & p->next != NULL && p->next->token == TOKEN_DIGIT_INT) {
+        n = createEmptyNode();
+        n->op = NODE_DIGIT_INT;
+        n->v.intvalue = -p->next->intVal;
+        *t = p->next->next;
         return  n;
     }
     else if ((n = call(t)) != NULL) {

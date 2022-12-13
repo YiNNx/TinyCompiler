@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-05 22:38:47
- * @LastEditTime: 2022-12-06 12:58:59
+ * @LastEditTime: 2022-12-13 21:33:06
  * @Description:
  */
 
@@ -30,11 +30,13 @@ ASTNode* declarationList(Token** t) {
     ASTNode* n, * rootNode;
     if ((n = declaration(&p)) != NULL) {
         rootNode = n;
+        printASTree(rootNode);
         while ((n = declaration(&p)) != NULL) {
             ASTNode* glueNode = createGlueNode();
             glueNode->left = rootNode;
             glueNode->right = n;
             rootNode = glueNode;
+            printASTree(rootNode);
         }
         return rootNode;
     }

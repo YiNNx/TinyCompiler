@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 18:56:40
- * @LastEditTime: 2022-12-06 09:38:00
+ * @LastEditTime: 2022-12-13 21:35:29
  * @Description:
  */
 
@@ -45,6 +45,7 @@ ASTNode* statementList(Token** t) {
         glueNode->left = rootNode;
         glueNode->right = n;
         rootNode = glueNode;
+        printASTree(rootNode);
     }
     return isEmpty ? createEmptyNode() : rootNode;
 }

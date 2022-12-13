@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-04 23:49:40
- * @LastEditTime: 2022-12-06 00:31:23
+ * @LastEditTime: 2022-12-08 00:47:15
  * @Description:
  */
 
@@ -48,6 +48,7 @@ ASTNode* funcDeclaration(Token** t) {
             ASTNode* funcDeclNode = createEmptyNode();
             funcDeclNode->op = NODE_FUNC_DECLARE;
             funcDeclNode->left = (paramsNode->op == NODE_EMPTY) ? NULL : paramsNode;
+            compoundNode->op = NODE_COMPOUND_FUNC;
             funcDeclNode->right = compoundNode;
             funcDeclNode->v.var.id = identity;
             funcDeclNode->v.var.type = type;

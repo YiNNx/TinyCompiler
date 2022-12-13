@@ -1,7 +1,7 @@
 /*
  * @Author: yinn
  * @Date: 2022-12-02 16:29:59
- * @LastEditTime: 2022-12-05 21:13:01
+ * @LastEditTime: 2022-12-08 01:15:22
  * @Description:
  */
 
@@ -41,6 +41,7 @@ enum ASTNodeType {
 
     NODE_GLUE,
     NODE_EMPTY,
+    NODE_COMPOUND_FUNC,
 };
 
 enum declarationType {
@@ -62,6 +63,8 @@ typedef struct ASTNode {
         } var;
     } v;
 }ASTNode;
+
+extern  char* varTypes[];
 
 void makeTree(ASTNode* root, ASTNode* l, ASTNode* mid, ASTNode* r);
 
